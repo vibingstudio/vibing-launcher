@@ -15,6 +15,21 @@ export function isGameInstalled() {
     }
 }
 
+export function getDownloadLink() {
+    let platform = os.platform()
+
+    switch (platform) {
+        case 'darwin':
+            return "https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_macos.zip"
+        case 'win32':
+            return "https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_windows.zip"
+        case 'linux':
+            return ""
+        default:
+            return ""
+    }
+}
+
 export function getGameInstallPath(platform: string, fullPath: boolean) {
     let outPath = ''
     console.log('log getPath: ', platform)

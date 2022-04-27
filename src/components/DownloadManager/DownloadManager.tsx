@@ -1,14 +1,9 @@
 import React, { FC, useEffect, useState } from 'react'
-import { getGameInstallPath, isGameInstalled } from '../../utils/gamePathUtils'
+import { getDownloadLink, getGameInstallPath, isGameInstalled } from '../../utils/gamePathUtils'
 import './DownloadManager.css'
 
 interface DownloadManagerProps {}
 
-let files = {
-    darwin: 'https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_macos.zip',
-    win32: 'https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_windows.zip',
-}
-//const fs = window.require('fs')
 const AdmZip = window.require('adm-zip')
 const os = window.require('os')
 const request = window.require('request')
@@ -21,7 +16,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [currentPlatform, setCurrentPlatform] = useState('unknown')
     const [buttonEnabled, setButtonEnabled] = useState(true)
     const [isGameDownloaded, setIsGameDownloaded] = useState(false)
-    const [downloadUrl, setDownloadUrl] = useState(false)
+    const [downloadUrl, setDownloadUrl] = useState("")
 
     useEffect(() => {
         setButtonEnabled(false)
@@ -31,9 +26,10 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         setCurrentPlatform(os.platform())
         setGameDir(getGameInstallPath(currentPlatform, false))
         setGamePath(getGameInstallPath(currentPlatform, true))
+        setDownloadUrl(getDownloadLink())
 
         setButtonEnabled(true)
-    }, [isInstalled])
+    }, [isInstalled, currentPlatform])
 
     const getGameHttp = async () => {
         console.log('here!')
