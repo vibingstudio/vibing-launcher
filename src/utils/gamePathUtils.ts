@@ -6,11 +6,9 @@ export function isGameInstalled() {
     let platform = os.platform()
     let gamePath = getGameInstallPath(platform, true)
 
-    console.log('searching for game installation at: ', gamePath)
     if (fs.existsSync(gamePath)) {
         return true
     } else {
-        console.log('game not found')
         return false
     }
 }
@@ -20,19 +18,18 @@ export function getDownloadLink() {
 
     switch (platform) {
         case 'darwin':
-            return "https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_macos.zip"
+            return 'https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_macos.zip'
         case 'win32':
-            return "https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_windows.zip"
+            return 'https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_windows.zip'
         case 'linux':
-            return ""
+            return ''
         default:
-            return ""
+            return ''
     }
 }
 
 export function getGameInstallPath(platform: string, fullPath: boolean) {
     let outPath = ''
-    console.log('log getPath: ', platform)
     switch (platform) {
         case 'darwin':
             outPath = pathModule.join(os.homedir(), 'Applications')

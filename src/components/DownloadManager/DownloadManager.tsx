@@ -1,6 +1,11 @@
 import React, { FC, useEffect, useState } from 'react'
-import { getDownloadLink, getGameInstallPath, isGameInstalled } from '../../utils/gamePathUtils'
+import {
+    getDownloadLink,
+    getGameInstallPath,
+    isGameInstalled,
+} from '../../utils/gamePathUtils'
 import './DownloadManager.css'
+import BounceLoader from 'react-spinners/BounceLoader'
 
 interface DownloadManagerProps {}
 
@@ -14,12 +19,12 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [gameDir, setGameDir] = useState('')
     const [isInstalled, setIsInstalled] = useState(false)
     const [currentPlatform, setCurrentPlatform] = useState('unknown')
-    const [buttonEnabled, setButtonEnabled] = useState(true)
-    const [isGameDownloaded, setIsGameDownloaded] = useState(false)
-    const [downloadUrl, setDownloadUrl] = useState("")
+    const [buttonEnabled, setButtonEnabled] = useState(false)
+    // const [isGameDownloaded, setIsGameDownloaded] = useState(false)
+    const [downloadUrl, setDownloadUrl] = useState('')
+    const [isDownloading, setIsDownloading] = useState(false)
 
     useEffect(() => {
-        setButtonEnabled(false)
         setIsInstalled(isGameInstalled())
 
         console.log('setting all initial values')
@@ -27,28 +32,22 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         setGameDir(getGameInstallPath(currentPlatform, false))
         setGamePath(getGameInstallPath(currentPlatform, true))
         setDownloadUrl(getDownloadLink())
-
         setButtonEnabled(true)
     }, [isInstalled, currentPlatform])
 
     const getGameHttp = async () => {
-        console.log('here!')
+        setIsDownloading(true)
+        console.log("downloading: ", isDownloading)
         await request.get(
             { url: downloadUrl, encoding: null },
             (err: any, res: any, body: any) => {
                 console.log('body: ', body)
                 var zip = new AdmZip(body)
-                var zipEntries = zip.getEntries()
-                console.log(zipEntries.length)
-
-                console.log('iterating over contents...')
-                zipEntries.forEach((entry: any) => {
-                    console.log(entry.entryName)
-                })
                 console.log('extracting into: ', gameDir)
                 zip.extractAllTo(gameDir, true)
             }
         )
+        setIsDownloading(false)
     }
 
     const runGame = async () => {
@@ -61,6 +60,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
 
     return (
         <div className="DownloadManager">
+            <div>
             {isInstalled && (
                 <button disabled={!buttonEnabled} onClick={runGame}>
                     Run Game
@@ -71,6 +71,12 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                     Download
                 </button>
             )}
+            </div>
+            <div>
+            {isDownloading && (<BounceLoader/>)}
+            </div>
+            
+            
         </div>
     )
 }
