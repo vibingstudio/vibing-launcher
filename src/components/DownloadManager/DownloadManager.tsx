@@ -36,9 +36,10 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     }, [isInstalled, currentPlatform])
 
     const getGameHttp = async () => {
-        setIsDownloading(true)
-        console.log("downloading: ", isDownloading)
-        await request.get(
+      console.log("downloading");
+        setIsDownloading(true);
+        console.log("downloading: ", isDownloading);
+        let rs = await request.get(
             { url: downloadUrl, encoding: null },
             (err: any, res: any, body: any) => {
                 console.log('body: ', body)
@@ -47,7 +48,9 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 zip.extractAllTo(gameDir, true)
             }
         )
+        console.log("res", rs)
         setIsDownloading(false)
+        console.log(isDownloading)
     }
 
     const runGame = async () => {
@@ -67,7 +70,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 </button>
             )}
             {!isInstalled && (
-                <button disabled={!buttonEnabled} onClick={getGameHttp}>
+                <button disabled={!buttonEnabled} onClick={async () => { await getGameHttp()}}>
                     Download
                 </button>
             )}
