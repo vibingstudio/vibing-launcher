@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, useCallback } from 'react'
 import {
     getDownloadLink,
     getGameInstallPath,
@@ -6,6 +6,7 @@ import {
 } from '../../utils/gamePathUtils'
 import './DownloadManager.css'
 import BounceLoader from 'react-spinners/BounceLoader'
+import curlirize from 'axios-curlirize'
 
 interface DownloadManagerProps {}
 
@@ -13,6 +14,8 @@ const AdmZip = window.require('adm-zip')
 const os = window.require('os')
 const request = window.require('request')
 const exec = window.require('child_process').execFile
+const axios = window.require('axios')
+curlirize(axios)
 
 export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [gamePath, setGamePath] = useState('')
@@ -26,7 +29,6 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
 
     useEffect(() => {
         setIsInstalled(isGameInstalled())
-
         console.log('setting all initial values')
         setCurrentPlatform(os.platform())
         setGameDir(getGameInstallPath(currentPlatform, false))
@@ -35,23 +37,157 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         setButtonEnabled(true)
     }, [isInstalled, currentPlatform])
 
-    const getGameHttp = async () => {
-      console.log("downloading");
-        setIsDownloading(true);
-        console.log("downloading: ", isDownloading);
-        let rs = await request.get(
+    // const getGame = async () => {
+    //   let rs = await request.get(
+    //     { url: downloadUrl, encoding: null },
+    //     (err: any, res: any, body: any) => {
+    //         console.log('body: ', body)
+    //         var zip = new AdmZip(body)
+    //         console.log('extracting into: ', gameDir)
+    //         zip.extractAllTo(gameDir, true)
+    //     }
+    // )
+    // }
+
+    const downloadGame = ()  => {
+        console.log('ttest!')
+        setIsDownloading(true)
+        setButtonEnabled(false)
+        console.log('isDownloadingTest', isDownloading)
+
+        setTimeout(() => {console.log('test')}, 1000)
+        console.log('isDownloadingTest', isDownloading)
+
+        let rs = request.get(
             { url: downloadUrl, encoding: null },
             (err: any, res: any, body: any) => {
                 console.log('body: ', body)
                 var zip = new AdmZip(body)
-                console.log('extracting into: ', gameDir)
+                console.log('extracting into : ', gameDir)
                 zip.extractAllTo(gameDir, true)
+
+                setIsDownloading(false)
+                setIsInstalled(true)
+                setButtonEnabled(true)
             }
         )
-        console.log("res", rs)
+    }
+
+    const getGameHttp = () => {
+        console.log('downloading')
+        setIsDownloading(true)
+        console.log('downloading: ', isDownloading, ' from ', downloadUrl)
+        //needle('get', downloadUrl).then(function(resp: any) { console.log("resp: ", resp.body) }).catch(function(err: any) { console.error(err) })
+
+        // axios({
+        //     url: downloadUrl,
+        //     method: 'GET',
+        //     responseType: 'blob', // important,
+        //     encoding: null
+        // }).then((response: any) => {
+        //     var zip = new AdmZip(response)
+        //     console.log('extracting into: ', gameDir)
+        //     zip.extractAllTo(gameDir, true)
+        // })
+
+        downloadGame();
+
+        // let rs = await request.get(
+        //     { url: downloadUrl, encoding: null },
+        //     (err: any, res: any, body: any) => {
+        //         console.log('body: ', body)
+        //         var zip = new AdmZip(body)
+        //         console.log('extracting into: ', gameDir)
+        //         zip.extractAllTo(gameDir, true)
+        //     }
+        // )
+
+        // request.get({url: downloadUrl, encoding: null}).then((err: any, res: any, body: any) => {
+        //   console.log('body: ', body)
+        //     var zip = new AdmZip(body)
+        //     console.log('extracting into: ', gameDir)
+        //     zip.extractAllTo(gameDir, true)
+        // })
         setIsDownloading(false)
+        setIsInstalled(true)
         console.log(isDownloading)
     }
+
+    // const getGameHttpWCallback = useCallback(async () => {
+    //     console.log('downloading')
+    //     await setIsDownloading(true)
+    //     console.log('downloading: ', isDownloading)
+    //     // let rs = await request.get(
+    //     //     { url: downloadUrl, encoding: null },
+    //     //     (err: any, res: any, body: any) => {
+    //     //         console.log('body: ', body)
+    //     //         var zip = new AdmZip(body)
+    //     //         console.log('extracting into: ', gameDir)
+    //     //         zip.extractAllTo(gameDir, true)
+    //     //     }
+    //     // )
+
+    //     new Promise((resolve) => {
+    //         request(
+    //             {
+    //                 url: downloadUrl,
+    //                 method: 'GET',
+    //                 encoding: null,
+    //             },
+    //             function (error: any, response: any, body: any) {
+    //                 if (!error) resolve(body)
+    //             }
+    //         )
+    //     }).then((body) => {
+    //         // process value here
+    //         console.log('body: ', body)
+    //         var zip = new AdmZip(body)
+    //         console.log('extracting into: ', gameDir)
+    //         zip.extractAllTo(gameDir, true)
+    //     })
+    //     //console.log("res", rs)
+    //     await setIsDownloading(false)
+    //     console.log(isDownloading)
+    //     await setIsInstalled(true)
+    // }, [isDownloading])
+
+    // const getGameHttp2 = async () => {
+    //     console.log('downloading')
+    //     await setIsDownloading(true)
+    //     console.log('downloading: ', isDownloading)
+    //     // let rs = await request.get(
+    //     //     { url: downloadUrl, encoding: null },
+    //     //     (err: any, res: any, body: any) => {
+    //     //         console.log('body: ', body)
+    //     //         var zip = new AdmZip(body)
+    //     //         console.log('extracting into: ', gameDir)
+    //     //         zip.extractAllTo(gameDir, true)
+    //     //     }
+    //     // )
+
+    //     new Promise((resolve) => {
+    //         request(
+    //             {
+    //                 url: downloadUrl,
+    //                 method: 'GET',
+    //                 encoding: null,
+    //             },
+    //             function (error: any, response: any, body: any) {
+    //                 !error ? resolve(body) : console.log(error)
+    //             }
+    //         )
+    //     }).then((body) => {
+    //         // process value here
+    //         console.log('body: ', body)
+    //         var zip = new AdmZip(body)
+    //         console.log('extracting into: ', gameDir)
+    //         zip.extractAllTo(gameDir, true)
+    //     })
+    //     //console.log("res", rs)
+    //     setIsDownloading(false)
+    //     console.log(isDownloading)
+    //     // await setIsInstalled(true)
+    // }
 
     const runGame = async () => {
         console.log('running game!')
@@ -64,22 +200,18 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     return (
         <div className="DownloadManager">
             <div>
-            {isInstalled && (
-                <button disabled={!buttonEnabled} onClick={runGame}>
-                    Run Game
-                </button>
-            )}
-            {!isInstalled && (
-                <button disabled={!buttonEnabled} onClick={async () => { await getGameHttp()}}>
-                    Download
-                </button>
-            )}
+                {isInstalled && (
+                    <button disabled={!buttonEnabled} onClick={runGame}>
+                        Run Game
+                    </button>
+                )}
+                {!isInstalled && (
+                    <button disabled={!buttonEnabled} onClick={downloadGame}>
+                        Download
+                    </button>
+                )}
+                <div>{isDownloading && <BounceLoader />}</div>
             </div>
-            <div>
-            {isDownloading && (<BounceLoader/>)}
-            </div>
-            
-            
         </div>
     )
 }
