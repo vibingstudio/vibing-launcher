@@ -20,7 +20,7 @@ export function getDownloadLink() {
         case 'darwin':
             return 'https://github.com/bitmon-world/bitmon-releases/releases/latest/download/Bitmon_macos.zip'
         case 'win32':
-            return 'https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_windows.zip'
+            return 'https://github.com/bitmon-world/bitmon-releases/releases/latest/download/Bitmon_windows.zip'
         case 'linux':
             return ''
         default:
