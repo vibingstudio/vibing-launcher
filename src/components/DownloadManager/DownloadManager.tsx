@@ -205,12 +205,20 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                         Run Game
                     </button>
                 )}
-                {!isInstalled && (
+                {!isInstalled && !isDownloading && (
                     <button disabled={!buttonEnabled} onClick={downloadGame}>
                         Download
                     </button>
                 )}
-                <div>{isDownloading && <BounceLoader />}</div>
+
+                {!isInstalled && isDownloading && (
+                    <button disabled={!buttonEnabled} onClick={downloadGame}>
+                        Downloading...
+                    </button>
+                )}
+                <div>
+                    <div>{isDownloading && <BounceLoader />}</div>
+                </div>
             </div>
         </div>
     )

@@ -28,6 +28,21 @@ export function getDownloadLink() {
     }
 }
 
+export function getLatestRelease() {
+    let platform = os.platform()
+
+    switch (platform) {
+        case 'darwin':
+            return 'https://github.com/bitmon-world/bitmon-releases/releases/latest/download/Bitmon_macos.zip'
+        case 'win32':
+            return 'https://github.com/bitmon-world/bitmon-releases/releases/download/0.0/Bitmon_windows.zip'
+        case 'linux':
+            return ''
+        default:
+            return ''
+    }
+}
+
 export function getGameInstallPath(platform: string, fullPath: boolean) {
     let outPath = ''
     switch (platform) {
