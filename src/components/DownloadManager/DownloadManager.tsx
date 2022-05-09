@@ -33,7 +33,9 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         setGamePath(getGameInstallPath(currentPlatform, true))
         setDownloadUrl(getDownloadLink())
         setButtonEnabled(true)
-        getLatestVersion().then((data: any) => setLatestVersion(data))
+        getLatestVersion()
+
+        console.log("latest version main: ", latestVersion)
         //setLatestVersion(getLatestVersion())
     }, [isInstalled, currentPlatform])
 
@@ -48,7 +50,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     //     }
     // )
     // }
-    const getLatestVersion = async () => {
+    const getLatestVersion = () => {
         console.log('getLatestVersion()')
         const options = {
             url: 'https://api.github.com/repos/bitmon-world/bitmon-releases/releases',
@@ -57,16 +59,25 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             },
         }
 
-        request.get(options, (err: any, res: any, body: any) => {
-            let releases = JSON.parse(body)
-            console.log(releases)
-            for (let release of releases) {
-                console.log('release version: ', release['tag_name'])
-            }
-            console.log(releases[0]['tag_name'])
-            setLatestVersion(releases[0]['tag_name'])
-            console.log('latest version: ', latestVersion)
-        })
+        console.log('gettingVersions() =>')
+        try {
+            request.get(options, (err: any, res: any, body: any) => {
+                let releases = JSON.parse(body)
+                console.log("releases", releases)
+                for (let release of releases) {
+                    console.log('release version: ', release['tag_name'])
+                }
+                console.log('latestVersion?  ', releases[0]['tag_name'])
+                //setLatestVersion(releases[0]['tag_name'])
+                console.log('returning REAL version value')
+                setLatestVersion(releases[0]['tag_name']) 
+                //console.log('latest version: ', latestVersion)
+            })
+            console.log('returning default version value')
+        } catch (error) {
+            console.log("error: ", error)
+        }
+        
     }
 
     const downloadGame = () => {
@@ -241,6 +252,11 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                         Downloading...
                     </button>
                 )}
+                <div>Latest Version {latestVersion}</div>
+                {isInstalled && (
+                    <div>Installed Version {latestVersion}</div>
+                )}
+                
             </div>
         </div>
     )
