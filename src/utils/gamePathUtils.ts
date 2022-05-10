@@ -92,3 +92,68 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
     console.log('gamePath:', outPath)
     return outPath
 }
+
+function getVersionPath(platform: string, fullPath: boolean) {
+    let outPath = ''
+    switch (platform) {
+        case 'darwin':
+            outPath = pathModule.join(os.homedir(), 'Applications')
+            break
+        case 'win32':
+            outPath = pathModule.join(os.homedir(), 'Bitmon')
+            break
+        case 'linux':
+            outPath = pathModule.join(
+                os.homedir(),
+                'usr',
+                'local',
+                'bin',
+                'bitmon'
+            )
+            break
+        default:
+            console.log('setting default game path')
+            outPath = ''
+            break
+    }
+
+    if (fullPath) {
+        switch (platform) {
+            case 'darwin':
+                outPath = pathModule.join(outPath, 'version.txt')
+                break
+            case 'win32':
+                outPath = pathModule.join(outPath, 'Bitmon', 'version.txt')
+                break
+            case 'linux':
+                outPath = pathModule.join(outPath, 'bitmon', 'version.txt')
+                break
+            default:
+                console.log('setting default game path')
+                outPath = ''
+                break
+        }
+    }
+
+    console.log('versionPath:', outPath)
+    return outPath
+}
+
+export function writeFileVersion(platform: string, version: string) {
+    fs.writeFile(getVersionPath(platform, true), version, function (err: any) {
+        if (err) return console.log(err)
+        console.log('Content Written > helloworld.txt')
+    })
+}
+
+export function getInstalledVersion(platform: string) : string {
+    try {
+        const version = fs.readFileSync(getVersionPath(platform, true), 'utf-8')
+        console.log("found version: ", version)
+        return version
+    } catch(error) {
+        console.log(error)
+        return "v0.0.0"
+    }
+}
+
