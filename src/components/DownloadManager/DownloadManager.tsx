@@ -55,7 +55,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
 
         console.log('latest version main: ', latestVersion)
         //setLatestVersion(getLatestVersion())
-    }, [isInstalled, currentPlatform, needsUpdate])
+    }, [isInstalled, currentPlatform, needsUpdate, installedVersion, latestVersion])
 
     const getLatestVersion = () => {
         console.log('getLatestVersion()')
