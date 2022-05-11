@@ -4,11 +4,12 @@ import {
     getGameInstallPath,
     isGameInstalled,
     writeFileVersion,
-    getInstalledVersion
+    getInstalledVersion,
 } from '../../utils/gamePathUtils'
-import { compare } from 'compare-versions';
+import { compare } from 'compare-versions'
 import './DownloadManager.css'
-import BounceLoader from 'react-spinners/BounceLoader'
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
 
 interface DownloadManagerProps {}
 
@@ -16,6 +17,7 @@ const AdmZip = window.require('adm-zip')
 const os = window.require('os')
 const request = window.require('request')
 const exec = window.require('child_process').execFile
+//const Loader = window.require('halogen/PulseLoader');
 
 export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [gamePath, setGamePath] = useState('')
@@ -36,7 +38,6 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
 
         setIsInstalled(isGameInstalled())
 
-        
         setGameDir(getGameInstallPath(currentPlatform, false))
         setGamePath(getGameInstallPath(currentPlatform, true))
         setDownloadUrl(getDownloadLink())
@@ -44,18 +45,34 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         getLatestVersion()
         setInstalledVersion(getInstalledVersion(currentPlatform))
 
-        console.log("look: ", latestVersion, " vs ", installedVersion)
+        console.log('look: ', latestVersion, ' vs ', installedVersion)
         if (compare(latestVersion, installedVersion, '>')) {
-            console.log(latestVersion, " > ", installedVersion, ": new update is available")
+            console.log(
+                latestVersion,
+                ' > ',
+                installedVersion,
+                ': new update is available'
+            )
             setNeedsUpdate(true)
         } else {
-            console.log(latestVersion, " = ", installedVersion, ": latest version is installed")
+            console.log(
+                latestVersion,
+                ' = ',
+                installedVersion,
+                ': latest version is installed'
+            )
             setNeedsUpdate(false)
         }
 
         console.log('latest version main: ', latestVersion)
         //setLatestVersion(getLatestVersion())
-    }, [isInstalled, currentPlatform, needsUpdate, installedVersion, latestVersion])
+    }, [
+        isInstalled,
+        currentPlatform,
+        needsUpdate,
+        installedVersion,
+        latestVersion,
+    ])
 
     const getLatestVersion = () => {
         console.log('getLatestVersion()')
@@ -125,29 +142,49 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         <div className="DownloadManager">
             <div>
                 {isInstalled && !needsUpdate && (
-                    <button disabled={!buttonEnabled} onClick={runGame}>
+                    <button
+                        className="start-btn"
+                        disabled={!buttonEnabled}
+                        onClick={runGame}
+                    >
                         Run Game
                     </button>
                 )}
                 {(!isInstalled || needsUpdate) && !isDownloading && (
-                    <button disabled={!buttonEnabled} onClick={downloadGame}>
-                        {needsUpdate && "Update"}
-                        {!needsUpdate && "Download"}
-                    </button>
+                    <Button
+                        className="start-btn"
+                        disabled={!buttonEnabled}
+                        onClick={downloadGame}
+                    >
+                        <Spinner animation="border" />
+                        {needsUpdate && 'Update'}
+                        {!needsUpdate && 'Download'}
+                    </Button>
                 )}
 
                 {(!isInstalled || needsUpdate) && isDownloading && (
-                    <button disabled={!buttonEnabled} onClick={downloadGame}>
-                        <div>
-                            <div>{isDownloading && <BounceLoader />}</div>
-                        </div>
-                        {needsUpdate && "Updating..."}
-                        {!needsUpdate && "Downloading...."}
-                    </button>
+                    <Button
+                        className="start-btn"
+                        disabled={!buttonEnabled}
+                        onClick={downloadGame}
+                    >
+                        {/* <div>
+                            <div>{isDownloading && <PulseLoader loading={isDownloading} color="#26A65B" size="16px"  />}</div>
+                        </div> */}
+                        <Spinner animation="border" />
+                        {needsUpdate && 'Updating...'}
+                        {!needsUpdate && 'Downloading....'}
+                    </Button>
                 )}
+                <Spinner animation="border" variant='danger'/>
+                <div className='bottom-info'>
                 <div>Latest Version: {latestVersion}</div>
-                {isInstalled && <div>Installed Version: {installedVersion}</div>}
-                {needsUpdate && <div>Needs Update</div>}
+                {isInstalled && (
+                    <div>Installed Version: {installedVersion}</div>
+                )}
+                {/* {needsUpdate && <div>Needs Update</div>} */}
+                </div>
+                
             </div>
         </div>
     )

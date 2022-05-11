@@ -1,2 +1,38 @@
 .DownloadManager {
 }
+
+@font-face {
+    font-family: 'Press Start 2p';
+    src: url('../../assets/PressStart2P-Regular.ttf');
+}
+
+.start-btn {
+    font-family: 'Press Start 2p';
+    text-align: center;
+    display: inline-block;
+    margin: 5px;
+    font-weight: bold;
+    padding: 10px 10px 10px 10px;
+    background-color: #6aa1fd;
+    text-shadow: -1px -1px black, 1px 1px white;
+    color: #91fcd4;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    border-radius: 7px;
+    box-shadow: 0 0.2em #6a98ff;
+    cursor: pointer;
+}
+.video-game-button:active,
+.start-btn:active {
+    box-shadow: none;
+    position: relative;
+    top: 0.2em;
+}
+
+.bottom-info {
+    position: absolute;
+    bottom: 0px;
+    
+    display: inline-block;
+}

@@ -142,14 +142,13 @@ export function writeFileVersion(platform: string, version: string) {
     })
 }
 
-export function getInstalledVersion(platform: string) : string {
+export function getInstalledVersion(platform: string): string {
     try {
         const version = fs.readFileSync(getVersionPath(platform, true), 'utf-8')
-        console.log("found version: ", version)
+        console.log('found version: ', version)
         return version
-    } catch(error) {
+    } catch (error) {
         console.log(error)
-        return "v0.0.0"
+        return 'v0.0.0'
     }
 }
-

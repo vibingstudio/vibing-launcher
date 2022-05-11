@@ -13,7 +13,7 @@ function App() {
                     src={backgroundImage}
                     alt="main banner"
                 ></img>
-                <h1>Bitmon Alpha Launcher</h1>
+                <h1 className='game-title'>Bitmon Alpha Launcher</h1>
                 <DownloadManager></DownloadManager>
             </div>
         </div>
