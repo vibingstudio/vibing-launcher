@@ -15,7 +15,6 @@ interface DownloadManagerProps {}
 const AdmZip = window.require('adm-zip')
 const os = window.require('os')
 const request = window.require('request')
-const fs = window.require('fs')
 const exec = window.require('child_process').execFile
 
 export const DownloadManager: FC<DownloadManagerProps> = () => {
@@ -28,8 +27,8 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     // const [isGameDownloaded, setIsGameDownloaded] = useState(false)
     const [downloadUrl, setDownloadUrl] = useState('')
     const [isDownloading, setIsDownloading] = useState(false)
-    const [latestVersion, setLatestVersion] = useState('')
-    const [installedVersion, setInstalledVersion] = useState('')
+    const [latestVersion, setLatestVersion] = useState('v0.0.0')
+    const [installedVersion, setInstalledVersion] = useState('v0.0.0')
 
     useEffect(() => {
         console.log('setting all initial values')
@@ -43,9 +42,10 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         setDownloadUrl(getDownloadLink())
         setButtonEnabled(true)
         getLatestVersion()
-        setInstalledVersion(getInstalledVersion(os.platform()))
+        setInstalledVersion(getInstalledVersion(currentPlatform))
 
-        if (compare(latestVersion, '10.0.4', '>')) {
+        console.log("look: ", latestVersion, " vs ", installedVersion)
+        if (compare(latestVersion, installedVersion, '>')) {
             console.log(latestVersion, " > ", installedVersion, ": new update is available")
             setNeedsUpdate(true)
         } else {
@@ -55,7 +55,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
 
         console.log('latest version main: ', latestVersion)
         //setLatestVersion(getLatestVersion())
-    }, [isInstalled, currentPlatform])
+    }, [isInstalled, currentPlatform, needsUpdate])
 
     const getLatestVersion = () => {
         console.log('getLatestVersion()')
@@ -72,22 +72,20 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 let releases = JSON.parse(body)
                 console.log('releases', releases)
                 for (let release of releases) {
-                    console.log('release version: ', release['tag_name'])
+                    //console.log('release version: ', release['tag_name'])
                 }
                 console.log('latestVersion?  ', releases[0]['tag_name'])
                 //setLatestVersion(releases[0]['tag_name'])
-                console.log('returning REAL version value')
+                //console.log('returning REAL version value')
                 setLatestVersion(releases[0]['tag_name'])
                 //console.log('latest version: ', latestVersion)
             })
-            console.log('returning default version value')
         } catch (error) {
             console.log('error: ', error)
         }
     }
 
     const downloadGame = () => {
-        console.log('ttest!')
         setIsDownloading(true)
         setButtonEnabled(false)
         console.log('isDownloadingTest', isDownloading)
@@ -110,6 +108,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 setIsDownloading(false)
                 setIsInstalled(true)
                 setButtonEnabled(true)
+                setNeedsUpdate(false)
             }
         )
     }
@@ -148,6 +147,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 )}
                 <div>Latest Version: {latestVersion}</div>
                 {isInstalled && <div>Installed Version: {installedVersion}</div>}
+                {needsUpdate && <div>Needs Update</div>}
             </div>
         </div>
     )

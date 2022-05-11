@@ -13,10 +13,6 @@ export function isGameInstalled() {
     }
 }
 
-export function saveCurrentVersion() {
-    return 'lol'
-}
-
 export function getDownloadLink() {
     let platform = os.platform()
 
