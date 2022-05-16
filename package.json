@@ -1,11 +1,12 @@
 {
-    "name": "vibing-launcher-ts",
+    "name": "vibing-launcher",
     "version": "0.1.0",
+    "productName": "Vibing Launcher",
     "private": true,
     "homepage": ".",
     "main": "build/electron/main.js",
     "author": "Vibing Studios",
-    "description": "Vibing Studios Web3 game launcher.",
+    "description": "Vibing Studios Web3 experiences launcher.",
     "dependencies": {
         "@testing-library/jest-dom": "^5.16.4",
         "@testing-library/react": "^13.1.1",
