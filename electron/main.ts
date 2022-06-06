@@ -15,6 +15,8 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false,
         },
+        frame: false,
+        //titleBarStyle: 'hidden'
     })
 
     if (isDev) {
@@ -49,7 +51,7 @@ function createWindow() {
         .catch((err) => console.log('An error occurred: ', err))
 
     if (isDev) {
-        win.webContents.openDevTools()
+        //win.webContents.openDevTools()
     }
 }
 
