@@ -57,8 +57,34 @@
     margin: auto;
     width: 160px;
 }
+
 .bottom-info {
     position: absolute;
-    bottom: 0px;
+    bottom: 10vh;
+    
     display: inline-block;
+}
+
+.right {
+    right: 10vh;
+}
+
+.left {
+    left: -38vh;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;800;900&display=swap');
+.Vibing-text {
+    color: #0055cf;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bolder;
+    font-size: medium;
+}
+
+.launcher-text {
+    color: #0055cf;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bolder;
+    text-transform: uppercase;
+    font-size: xx-large;
 }

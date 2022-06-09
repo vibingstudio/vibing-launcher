@@ -189,12 +189,17 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                     </Button>
                 )}
                 {/* <Spinner animation="border" variant='danger'/> */}
-                <div className='bottom-info'>
+
+                <div className='bottom-info right Vibing-text'>
                 <div>Latest Version: {latestVersion}</div>
                 {isInstalled && (
                     <div>Installed Version: {installedVersion}</div>
                 )}
                 {/* {needsUpdate && <div>Needs Update</div>} */}
+                </div>
+
+                <div className='bottom-info left launcher-text'>
+                <div>ALPHA LAUNCHER</div>
                 </div>
                 
             </div>
