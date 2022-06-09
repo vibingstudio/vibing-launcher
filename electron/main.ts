@@ -53,6 +53,7 @@ function createWindow() {
     if (isDev) {
         //win.webContents.openDevTools()
     }
+    win.setResizable(false);
 }
 
 app.on('ready', createWindow)

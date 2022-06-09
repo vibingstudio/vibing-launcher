@@ -8,9 +8,7 @@ import {
 } from '../../utils/gamePathUtils'
 import { compare } from 'compare-versions'
 import './DownloadManager.css'
-import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import updateButton from '../../assets/launcher-boton1.png'
 
 interface DownloadManagerProps {}
 
@@ -34,7 +32,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
 
     useEffect(() => {
-        console.log('setting all initial values')
+        // console.log('setting all initial values')
         setCurrentPlatform(os.platform())
 
         setIsInstalled(isGameInstalled())
@@ -48,25 +46,25 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
 
         if (latestVersion && installedVersion) {
             if (compare(latestVersion, installedVersion, '>')) {
-                console.log(
-                    latestVersion,
-                    ' > ',
-                    installedVersion,
-                    ': new update is available'
-                )
+                // console.log(
+                //     latestVersion,
+                //     ' > ',
+                //     installedVersion,
+                //     ': new update is available'
+                // )
                 setNeedsUpdate(true)
             } else {
-                console.log(
-                    latestVersion,
-                    ' = ',
-                    installedVersion,
-                    ': latest version is installed'
-                )
+                // console.log(
+                //     latestVersion,
+                //     ' = ',
+                //     installedVersion,
+                //     ': latest version is installed'
+                // )
                 setNeedsUpdate(false)
             }
         }
 
-        console.log('latest version main: ', latestVersion)
+        // console.log('latest version main: ', latestVersion)
         //setLatestVersion(getLatestVersion())
     }, [
         isInstalled,
@@ -77,7 +75,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     ])
 
     const getLatestVersion = () => {
-        console.log('getLatestVersion()')
+        // console.log('getLatestVersion()')
         const options = {
             url: 'https://api.github.com/repos/bitmon-world/bitmon-releases/releases',
             headers: {
@@ -85,7 +83,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             },
         }
 
-        console.log('gettingVersions() =>')
+        // console.log('gettingVersions() =>')
         try {
             request.get(options, (err: any, res: any, body: any) => {
                 let releases = JSON.parse(body)
@@ -102,26 +100,26 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 //console.log('latest version: ', latestVersion)
             })
         } catch (error) {
-            console.log('error: ', error)
+            // console.log('error: ', error)
         }
     }
 
     const downloadGame = () => {
         setIsDownloading(true)
         setButtonEnabled(false)
-        console.log('isDownloadingTest', isDownloading)
+        // console.log('isDownloadingTest', isDownloading)
 
         setTimeout(() => {
-            console.log('test')
+            // console.log('test')
         }, 1000)
-        console.log('isDownloadingTest', isDownloading)
+        // console.log('isDownloadingTest', isDownloading)
 
         request.get(
             { url: downloadUrl, encoding: null },
             (err: any, res: any, body: any) => {
-                console.log('body: ', body)
+                // console.log('body: ', body)
                 var zip = new AdmZip(body)
-                console.log('extracting into : ', gameDir)
+                // console.log('extracting into : ', gameDir)
                 zip.extractAllTo(gameDir, true)
                 writeFileVersion(os.platform(), latestVersion)
                 setInstalledVersion(latestVersion)
@@ -135,18 +133,18 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     }
 
     const runGame = async () => {
-        console.log('running game!')
+        // console.log('running game!')
 
         // file permissions
         await exec("chmod -R 755 " + gamePath, function (err: any, data: any) {
-            console.log('755 err: ', err)
-            console.log('755 data: ', data.toString())
+            // console.log('755 err: ', err)
+            // console.log('755 data: ', data.toString())
         })
 
         // command to open the Bitmon app
         await exec("open " + gamePath, function (err: any, data: any) {
-            console.log('err: ', err)
-            console.log('data: ', data.toString())
+            // console.log('err: ', err)
+            // console.log('data: ', data.toString())
         })
     }
 
@@ -155,7 +153,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             <div>
                 {isInstalled && !needsUpdate && (
                     <button
-                        className="start-btn"
+                        className="main-btn"
                         disabled={!buttonEnabled}
                         onClick={runGame}
                     >
@@ -163,43 +161,41 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                     </button>
                 )}
                 {(!isInstalled || needsUpdate) && !isDownloading && (
-                    <Button
-                        className="start-btn"
+                    <button
+                        className={needsUpdate ? "main-btn" : "download-btn"}
                         disabled={!buttonEnabled}
                         onClick={downloadGame}
                     >
-                        {/* <Spinner animation="border" /> */}
-                        {needsUpdate && 'UPDATE'}
-                        {!needsUpdate && 'DOWNLOAD'}
-                    </Button>
+                        {needsUpdate ? "UPDATE" : "DOWNLOAD"}
+                    </button>
                 )}
 
                 {(!isInstalled || needsUpdate) && isDownloading && (
-                    <Button
-                        className="start-btn"
-                        disabled={!buttonEnabled}
+                    <button
+                        className="main-btn disabled-btn"
+                        disabled={true}
                         onClick={downloadGame}
                     >
                         {/* <div>
                             <div>{isDownloading && <PulseLoader loading={isDownloading} color="#26A65B" size="16px"  />}</div>
                         </div> */}
-                        <Spinner animation="border" />
-                        {needsUpdate && 'UPDATING...'}
-                        {!needsUpdate && 'DOWNLOADING...'}
-                    </Button>
+                        <Spinner animation="border" style={{marginTop: '1vh'}} />
+                        {/* {needsUpdate && 'UPDATING...'}
+                        {!needsUpdate && 'DOWNLOADING...'} */}
+                    </button>
                 )}
                 {/* <Spinner animation="border" variant='danger'/> */}
 
                 <div className='bottom-info right Vibing-text'>
-                <div>Latest Version: {latestVersion}</div>
-                {isInstalled && (
-                    <div>Installed Version: {installedVersion}</div>
-                )}
-                {/* {needsUpdate && <div>Needs Update</div>} */}
+                    <div>Latest Version: {latestVersion}</div>
+                    {isInstalled && (
+                        <div style={{fontSize: 'small'}}>Installed Version: {installedVersion}</div>
+                    )}
+                    {/* {needsUpdate && <div>Needs Update</div>} */}
                 </div>
 
                 <div className='bottom-info left launcher-text'>
-                <div>ALPHA LAUNCHER</div>
+                    <div>ALPHA LAUNCHER</div>
                 </div>
                 
             </div>
