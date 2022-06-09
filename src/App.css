@@ -72,3 +72,30 @@
         transform: rotate(360deg);
     }
 }
+
+.min-btn{
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    top: 3%;
+    left: 85%;
+    display: block;
+    margin: auto;
+    background-image: url(./assets/launcher-minimizar.png);
+    background-repeat: no-repeat;
+    width: 39px;
+    height: 39px;
+}
+.x-btn{
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    top: 3%;
+    left: 90%;
+    display: block;
+    margin: auto;
+    background-image: url(./assets/launcher-cerrar.png);
+    background-repeat: no-repeat;
+    width: 39px;
+    height: 39px;
+}
