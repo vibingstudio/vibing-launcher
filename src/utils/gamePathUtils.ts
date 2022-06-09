@@ -62,7 +62,7 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
             )
             break
         default:
-            console.log('setting default game path')
+            // console.log('setting default game path')
             outPath = ''
             break
     }
@@ -79,13 +79,13 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
                 outPath = pathModule.join(outPath, 'bitmon')
                 break
             default:
-                console.log('setting default game path')
+                // console.log('setting default game path')
                 outPath = ''
                 break
         }
     }
 
-    console.log('gamePath:', outPath)
+    // console.log('gamePath:', outPath)
     return outPath
 }
 
@@ -108,7 +108,7 @@ function getVersionPath(platform: string, fullPath: boolean) {
             )
             break
         default:
-            console.log('setting default game path')
+            // console.log('setting default game path')
             outPath = ''
             break
     }
@@ -125,30 +125,30 @@ function getVersionPath(platform: string, fullPath: boolean) {
                 outPath = pathModule.join(outPath, 'bitmon', 'version.txt')
                 break
             default:
-                console.log('setting default game path')
+                // console.log('setting default game path')
                 outPath = ''
                 break
         }
     }
 
-    console.log('versionPath:', outPath)
+    // console.log('versionPath:', outPath)
     return outPath
 }
 
 export function writeFileVersion(platform: string, version: string) {
     fs.writeFile(getVersionPath(platform, true), version, function (err: any) {
         if (err) return console.log(err)
-        console.log('Content Written > helloworld.txt')
+        // console.log('Content Written > helloworld.txt')
     })
 }
 
 export function getInstalledVersion(platform: string): string {
     try {
         const version = fs.readFileSync(getVersionPath(platform, true), 'utf-8')
-        console.log('found version: ', version)
+        // console.log('found version: ', version)
         return version
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return 'v0.0.0'
     }
 }

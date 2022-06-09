@@ -1,38 +1,105 @@
 .DownloadManager {
-}
-
-@font-face {
-    font-family: 'Press Start 2p';
-    src: url('../../assets/PressStart2P-Regular.ttf');
-}
-
-.start-btn {
-    font-family: 'Press Start 2p';
     text-align: center;
-    display: inline-block;
-    margin: 5px;
-    font-weight: bold;
-    padding: 10px 10px 10px 10px;
-    background-color: #6aa1fd;
-    text-shadow: -1px -1px black, 1px 1px white;
-    color: #91fcd4;
-    -webkit-border-radius: 7px;
-    -moz-border-radius: 7px;
-    -o-border-radius: 7px;
-    border-radius: 7px;
-    box-shadow: 0 0.2em #6a98ff;
-    cursor: pointer;
+    position: absolute;
+    left: 37%;
+    top: 70%;
+    right: 0;
+    bottom: 0;
+    display: block;
+    margin: auto;
 }
-.video-game-button:active,
-.start-btn:active {
-    box-shadow: none;
-    position: relative;
-    top: 0.2em;
+
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+.main-btn {
+    font-family: 'Lilita One', cursive;
+    font-size: 170%; 
+    text-align: center;
+    font-weight: bold;
+    background-image: url(../../assets/launcher-boton1.png);
+    background-size: 100%;
+    cursor: pointer;
+    color: rgb(213, 240, 255);  
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    position: absolute;
+    display: block;
+    margin-left: 3vh;
+    margin-top: 4vh;
+    padding: 10px;
+    width: 30vh;
+    transition: all 0.3s ease;
+    transform: scale(1);
+}
+
+.main-btn:hover {
+    transform: scale(1.1) perspective(1px)
+}
+
+.disabled-btn {
+    cursor: default;
+    background-image: url(../../assets/launcher-boton2.png);
+}
+
+.download-btn {
+    font-family: 'Lilita One', cursive;
+    font-size: 170%; 
+    text-align: center;
+    font-weight: bold;
+    background-image: url(../../assets/launcher-boton1.png);
+    background-size: 100%;
+    cursor: pointer;
+    color: rgb(213, 240, 255);  
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    position: absolute;
+    display: block;
+    margin-left: 3vh;
+    margin-top: 4vh;
+    padding: 10px;
+    height: 40%;
+    transition: all 0.3s ease;
+    transform: scale(1);
+    padding-left: 3vh;
+    padding-right: 3vh;
+    margin-left: -0.1vh;
+}
+
+.download-btn:hover {
+    transform: scale(1.1) perspective(1px)
 }
 
 .bottom-info {
     position: absolute;
-    bottom: 0px;
+    bottom: 8vh;
     
     display: inline-block;
+}
+
+.right {
+    right: 10vh;
+}
+
+.left {
+    left: -38vh;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;800;900&display=swap');
+.Vibing-text {
+    color: #01378e;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bolder;
+    font-size: medium;
+    font-weight: bolder;
+}
+
+.launcher-text {
+    color: #01378e;
+    font-family: 'Nunito', sans-serif;
+    text-transform: uppercase;
+    font-size: larger;
+    bottom: 9vh;
+    transform: scale(1, 1);
+    font-weight: bolder;
 }

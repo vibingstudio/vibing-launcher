@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import * as path from 'path'
 import * as isDev from 'electron-is-dev'
 import installExtension, {
@@ -15,6 +15,8 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false,
         },
+        frame: false,
+        //titleBarStyle: 'hidden'
     })
 
     if (isDev) {
@@ -49,8 +51,9 @@ function createWindow() {
         .catch((err) => console.log('An error occurred: ', err))
 
     if (isDev) {
-        win.webContents.openDevTools()
+        //win.webContents.openDevTools()
     }
+    win.setResizable(false);
 }
 
 app.on('ready', createWindow)
@@ -65,4 +68,14 @@ app.on('activate', () => {
     if (win === null) {
         createWindow()
     }
+})
+
+ipcMain.on('minimize', () => {
+    if (win !== null) {
+        win.minimize()
+    }
+})
+
+ipcMain.on('close', () => {
+    app.quit()
 })
