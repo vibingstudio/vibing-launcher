@@ -9,8 +9,9 @@
     margin: auto;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
 .main-btn {
-    font-family: 'Secular One', sans-serif;
+    font-family: 'Lilita One', cursive;
     font-size: 170%; 
     text-align: center;
     font-weight: bold;
@@ -31,7 +32,7 @@
     transform: scale(1);
 }
 
-.main-btn:hover:active {
+.main-btn:hover {
     transform: scale(1.1) perspective(1px)
 }
 
@@ -41,7 +42,7 @@
 }
 
 .download-btn {
-    font-family: 'Secular One', sans-serif;
+    font-family: 'Lilita One', cursive;
     font-size: 170%; 
     text-align: center;
     font-weight: bold;
