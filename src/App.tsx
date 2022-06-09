@@ -2,13 +2,21 @@ import React from 'react'
 import launcherImage from './assets/launcher-imagen.png'
 import windowBackground from './assets/launcher-ventana.png'
 import bitmonLogo from './assets/logo bitmon.png'
-import minimizar from './assets/launcher-minimizar.png'
-import equis from './assets/launcher-cerrar.png'
 
 import './App.css'
 import { DownloadManager } from './components/DownloadManager/DownloadManager'
+const ipcRenderer = window.require('electron').ipcRenderer;
 
 function App() {
+
+    const handleCloseButton = () => {
+        ipcRenderer.send('close')
+    }
+    
+    const handleMinButton = () => {
+        ipcRenderer.send('minimize')
+    }
+
     return (
         <div className="App" >
             <div>
@@ -28,17 +36,18 @@ function App() {
                     src={bitmonLogo}
                     alt='bitmon logo'
                 ></img>
-                <button 
+                <button
+                    id='close-btn'
                     className="x-btn"
-                    // onClick={exitGame}
+                    onClick={handleCloseButton}
                 >
                 </button>
-                <button 
+                <button
+                    id='min-btn'
                     className="min-btn"
-                    // onClick={exitGame}
+                    onClick={handleMinButton}
                 > 
                 </button>
-                <h1 className='game-title'>Bitmon Alpha Launcher</h1>
                 <DownloadManager></DownloadManager>
             </div>
         </div>
