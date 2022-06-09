@@ -10,6 +10,7 @@ import { compare } from 'compare-versions'
 import './DownloadManager.css'
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
+import updateButton from '../../assets/launcher-boton1.png'
 
 interface DownloadManagerProps {}
 
@@ -153,13 +154,13 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         <div className="DownloadManager">
             <div>
                 {isInstalled && !needsUpdate && (
-                    <Button
+                    <button
                         className="start-btn"
                         disabled={!buttonEnabled}
                         onClick={runGame}
                     >
-                        Run Game
-                    </Button>
+                        START
+                    </button>
                 )}
                 {(!isInstalled || needsUpdate) && !isDownloading && (
                     <Button
@@ -167,9 +168,9 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                         disabled={!buttonEnabled}
                         onClick={downloadGame}
                     >
-                        <Spinner animation="border" />
-                        {needsUpdate && 'Update'}
-                        {!needsUpdate && 'Download'}
+                        {/* <Spinner animation="border" /> */}
+                        {needsUpdate && 'UPDATE'}
+                        {!needsUpdate && 'DOWNLOAD'}
                     </Button>
                 )}
 
@@ -183,8 +184,8 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                             <div>{isDownloading && <PulseLoader loading={isDownloading} color="#26A65B" size="16px"  />}</div>
                         </div> */}
                         <Spinner animation="border" />
-                        {needsUpdate && 'Updating...'}
-                        {!needsUpdate && 'Downloading...'}
+                        {needsUpdate && 'UPDATING...'}
+                        {!needsUpdate && 'DOWNLOADING...'}
                     </Button>
                 )}
                 {/* <Spinner animation="border" variant='danger'/> */}
