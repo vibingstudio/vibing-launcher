@@ -9,6 +9,7 @@ import {
 import { compare } from 'compare-versions'
 import './DownloadManager.css'
 import Spinner from 'react-bootstrap/Spinner';
+import { platform } from 'os';
 
 interface DownloadManagerProps {}
 
@@ -16,6 +17,7 @@ const AdmZip = window.require('adm-zip')
 const os = window.require('os')
 const request = window.require('request')
 const exec = window.require('child_process').exec
+var execWin = window.require('child_process').execFile;
 //const Loader = window.require('halogen/PulseLoader');
 
 export const DownloadManager: FC<DownloadManagerProps> = () => {
@@ -135,17 +137,28 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const runGame = async () => {
         // console.log('running game!')
 
-        // file permissions
-        await exec("chmod -R 755 " + gamePath, function (err: any, data: any) {
-            // console.log('755 err: ', err)
-            // console.log('755 data: ', data.toString())
-        })
+        // file permissions on mac only
+        console.log("current platform", currentPlatform)
+        if (currentPlatform === 'darwin') {
+            await exec("chmod -R 755 " + gamePath, function (err: any, data: any) {
+                // console.log('755 err: ', err)
+                // console.log('755 data: ', data.toString())
+            })
 
-        // command to open the Bitmon app
-        await exec("open " + gamePath, function (err: any, data: any) {
-            // console.log('err: ', err)
-            // console.log('data: ', data.toString())
-        })
+            // command to open the Bitmon app
+            await exec("open " + gamePath, function (err: any, data: any) {
+                // console.log('err: ', err)
+                // console.log('data: ', data.toString())
+            })
+        } else if (currentPlatform === 'win32'){
+            await execWin(gamePath, function (err: any, data: any) {
+                console.log('err: ', err)
+                console.log('data: ', data.toString())
+            })
+        }
+        
+
+        
     }
 
     return (
