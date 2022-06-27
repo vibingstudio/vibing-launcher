@@ -20,7 +20,6 @@ function App() {
     return (
         <div className="App" >
             <div>
-                
                 <img
                     draggable="false"
                     className="Bitmon-background"
@@ -39,6 +38,7 @@ function App() {
                     src={bitmonLogo}
                     alt='bitmon logo'
                 ></img>
+                <div className="Draggable-Frame-Area" />
                 <button
                     id='close-btn'
                     className="x-btn"
