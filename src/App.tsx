@@ -22,16 +22,19 @@ function App() {
             <div>
                 
                 <img
+                    draggable="false"
                     className="Bitmon-background"
                     src={windowBackground}
                     alt="main banner"
                 ></img>
                 <img
+                    draggable="false"
                     className="Launcher-image"
                     src={launcherImage}
                     alt='launcher img'
                 ></img>
                 <img
+                    draggable="false"
                     className="Bitmon-logo"
                     src={bitmonLogo}
                     alt='bitmon logo'
