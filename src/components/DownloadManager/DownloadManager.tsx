@@ -32,6 +32,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const [latestVersion, setLatestVersion] = useState('v0.0.0')
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
+    const [zipSizeMb, setZipSizeMb] = useState(0);
 
     useEffect(() => {
         // console.log('setting all initial values')
@@ -89,15 +90,24 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         try {
             request.get(options, (err: any, res: any, body: any) => {
                 let releases = JSON.parse(body)
-                console.log('releases', releases)
+                console.log("releases: ", releases);
+                
                 // for (let release of releases) {
                 //     //console.log('release version: ', release['tag_name'])
                 // }
                 if (releases[0]) {
-                    console.log('latestVersion?  ', releases[0]['tag_name'])
                     //setLatestVersion(releases[0]['tag_name'])
                     //console.log('returning REAL version value')
                     setLatestVersion(releases[0]['tag_name'])
+                    for (let asset of releases[0]['assets']) {
+                        let osName = asset['name'].replace("Bitmon_", "")
+                        osName = osName.replace(".zip", "")
+                        if (osName === "macos") osName = "darwin"
+                        if (currentPlatform === osName) {
+                            console.log("asset size: ", Math.round(+asset['size'] / 1024 / 1024))
+                            setZipSizeMb(Math.round(+asset['size'] / 1024 / 1024))
+                        }
+                    }
                 }
                 //console.log('latest version: ', latestVersion)
             })
@@ -122,7 +132,14 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 // console.log('body: ', body)
                 var zip = new AdmZip(body)
                 // console.log('extracting into : ', gameDir)
-                zip.extractAllTo(gameDir, true)
+                // zip.extractAllTo(gameDir, true)
+                console.log(">>> begin...");
+                zip.extractAllToAsync(gameDir, true, function(err: any) {
+                    if (err) console.log('error', err)
+                    else console.log('success');
+                });
+                console.log(">>> end");
+
                 writeFileVersion(os.platform(), latestVersion)
                 setInstalledVersion(latestVersion)
 
@@ -133,6 +150,18 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             }
         )
     }
+    console.log("gamePath: ", gamePath)
+    let inter;
+        inter = setInterval(() => {
+            var fs = window.require("fs"); //Load the filesystem module
+            var stats = fs.statSync(gamePath)
+            var fileSizeInBytes = stats.size;
+            // Convert the file size to megabytes (optional)
+            var fileSizeInMegabytes = fileSizeInBytes / (1024*1024);
+            console.log("size: ", fileSizeInBytes)
+            console.log("mb size: ", fileSizeInMegabytes)
+        }, 3000)
+    clearInterval(inter)
 
     const runGame = async () => {
         // console.log('running game!')
