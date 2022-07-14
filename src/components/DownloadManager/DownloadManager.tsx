@@ -9,7 +9,6 @@ import {
 import { compare } from 'compare-versions'
 import './DownloadManager.css'
 import Spinner from 'react-bootstrap/Spinner';
-import { platform } from 'os';
 
 interface DownloadManagerProps {}
 
@@ -17,8 +16,8 @@ const AdmZip = window.require('adm-zip')
 const os = window.require('os')
 const request = window.require('request')
 const exec = window.require('child_process').exec
+const ipcRenderer = window.require('electron').ipcRenderer;
 var execWin = window.require('child_process').execFile;
-//const Loader = window.require('halogen/PulseLoader');
 
 export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [gamePath, setGamePath] = useState('')
@@ -27,48 +26,32 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [needsUpdate, setNeedsUpdate] = useState(false)
     const [currentPlatform, setCurrentPlatform] = useState('unknown')
     const [buttonEnabled, setButtonEnabled] = useState(false)
-    // const [isGameDownloaded, setIsGameDownloaded] = useState(false)
     const [downloadUrl, setDownloadUrl] = useState('')
     const [isDownloading, setIsDownloading] = useState(false)
     const [latestVersion, setLatestVersion] = useState('v0.0.0')
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
-    const [zipSizeMb, setZipSizeMb] = useState(0);
 
     useEffect(() => {
-        // console.log('setting all initial values')
         setCurrentPlatform(os.platform())
-
         setIsInstalled(isGameInstalled())
-
         setGameDir(getGameInstallPath(currentPlatform, false))
         setGamePath(getGameInstallPath(currentPlatform, true))
         setDownloadUrl(getDownloadLink())
         setButtonEnabled(true)
-        getLatestVersion()
         setInstalledVersion(getInstalledVersion(currentPlatform))
+        getLatestVersion()
 
         if (latestVersion && installedVersion) {
-            if (compare(latestVersion, installedVersion, '>')) {
-                // console.log(
-                //     latestVersion,
-                //     ' > ',
-                //     installedVersion,
-                //     ': new update is available'
-                // )
-                setNeedsUpdate(true)
-            } else {
-                // console.log(
-                //     latestVersion,
-                //     ' = ',
-                //     installedVersion,
-                //     ': latest version is installed'
-                // )
+            if (installedVersion === 'v0.0.0') {
                 setNeedsUpdate(false)
+            } else {
+                if (compare(latestVersion, installedVersion, '>')) {
+                    setNeedsUpdate(true)
+                } else {
+                    setNeedsUpdate(false)
+                }
             }
         }
-
-        // console.log('latest version main: ', latestVersion)
-        //setLatestVersion(getLatestVersion())
     }, [
         isInstalled,
         currentPlatform,
@@ -78,7 +61,6 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     ])
 
     const getLatestVersion = () => {
-        // console.log('getLatestVersion()')
         const options = {
             url: 'https://api.github.com/repos/bitmon-world/bitmon-releases/releases',
             headers: {
@@ -86,108 +68,46 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             },
         }
 
-        // console.log('gettingVersions() =>')
-        try {
-            request.get(options, (err: any, res: any, body: any) => {
-                let releases = JSON.parse(body)
-                console.log("releases: ", releases);
-                
-                // for (let release of releases) {
-                //     //console.log('release version: ', release['tag_name'])
-                // }
-                if (releases[0]) {
-                    //setLatestVersion(releases[0]['tag_name'])
-                    //console.log('returning REAL version value')
-                    setLatestVersion(releases[0]['tag_name'])
-                    for (let asset of releases[0]['assets']) {
-                        let osName = asset['name'].replace("Bitmon_", "")
-                        osName = osName.replace(".zip", "")
-                        if (osName === "macos") osName = "darwin"
-                        if (currentPlatform === osName) {
-                            console.log("asset size: ", Math.round(+asset['size'] / 1024 / 1024))
-                            setZipSizeMb(Math.round(+asset['size'] / 1024 / 1024))
-                        }
-                    }
-                }
-                //console.log('latest version: ', latestVersion)
-            })
-        } catch (error) {
-            // console.log('error: ', error)
-        }
+        request.get(options, (err: any, res: any, body: any) => {
+            let releases = JSON.parse(body)
+            if (releases[0]) {
+                setLatestVersion(releases[0]['tag_name'])
+            }
+        })
     }
 
     const downloadGame = () => {
         setIsDownloading(true)
         setButtonEnabled(false)
-        // console.log('isDownloadingTest', isDownloading)
 
-        setTimeout(() => {
-            // console.log('test')
-        }, 1000)
-        // console.log('isDownloadingTest', isDownloading)
+        ipcRenderer.send("download", {
+            url: downloadUrl,
+            properties: { directory: gameDir }
+        });
 
-        request.get(
-            { url: downloadUrl, encoding: null },
-            (err: any, res: any, body: any) => {
-                // console.log('body: ', body)
-                var zip = new AdmZip(body)
-                // console.log('extracting into : ', gameDir)
-                // zip.extractAllTo(gameDir, true)
-                console.log(">>> begin...");
-                zip.extractAllToAsync(gameDir, true, function(err: any) {
-                    if (err) console.log('error', err)
-                    else console.log('success');
-                });
-                console.log(">>> end");
-
-                writeFileVersion(os.platform(), latestVersion)
-                setInstalledVersion(latestVersion)
-
-                setIsDownloading(false)
-                setIsInstalled(true)
-                setButtonEnabled(true)
-                setNeedsUpdate(false)
-            }
-        )
+        // TODO when complete do the following
+            // var zip = new AdmZip("PATH_TO_BITMON_GAME_ZIP")
+            // zip.extractAllTo(gameDir, true)
+            // writeFileVersion(os.platform(), latestVersion)
+            // setInstalledVersion(latestVersion)
+            // setIsDownloading(false)
+            // setIsInstalled(true)
+            // setButtonEnabled(true)
+            // setNeedsUpdate(false)
     }
-    console.log("gamePath: ", gamePath)
-    let inter;
-        inter = setInterval(() => {
-            var fs = window.require("fs"); //Load the filesystem module
-            var stats = fs.statSync(gamePath)
-            var fileSizeInBytes = stats.size;
-            // Convert the file size to megabytes (optional)
-            var fileSizeInMegabytes = fileSizeInBytes / (1024*1024);
-            console.log("size: ", fileSizeInBytes)
-            console.log("mb size: ", fileSizeInMegabytes)
-        }, 3000)
-    clearInterval(inter)
 
     const runGame = async () => {
-        // console.log('running game!')
-
         // file permissions on mac only
         console.log("current platform", currentPlatform)
         if (currentPlatform === 'darwin') {
-            await exec("chmod -R 755 " + gamePath, function (err: any, data: any) {
-                // console.log('755 err: ', err)
-                // console.log('755 data: ', data.toString())
-            })
-
-            // command to open the Bitmon app
-            await exec("open " + gamePath, function (err: any, data: any) {
-                // console.log('err: ', err)
-                // console.log('data: ', data.toString())
-            })
+            await exec("chmod -R 755 " + gamePath)
+            await exec("open " + gamePath)
         } else if (currentPlatform === 'win32'){
             await execWin(gamePath, function (err: any, data: any) {
                 console.log('err: ', err)
                 console.log('data: ', data.toString())
             })
         }
-        
-
-        
     }
 
     return (
@@ -218,22 +138,18 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                         disabled={true}
                         onClick={downloadGame}
                     >
-                        {/* <div>
-                            <div>{isDownloading && <PulseLoader loading={isDownloading} color="#26A65B" size="16px"  />}</div>
-                        </div> */}
+                        {/* TODO change Spinner to Progress Bar */}
                         <Spinner animation="border" style={{marginTop: '1vh'}} />
                         {/* {needsUpdate && 'UPDATING...'}
                         {!needsUpdate && 'DOWNLOADING...'} */}
                     </button>
                 )}
-                {/* <Spinner animation="border" variant='danger'/> */}
 
                 <div className='bottom-info right Vibing-text'>
                     <div>Latest Version: {latestVersion}</div>
                     {isInstalled && (
                         <div style={{fontSize: 'small'}}>Installed Version: {installedVersion}</div>
                     )}
-                    {/* {needsUpdate && <div>Needs Update</div>} */}
                 </div>
 
                 <div className='bottom-info left launcher-text'>

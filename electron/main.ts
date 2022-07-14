@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
+import { download } from 'electron-dl'
 import * as path from 'path'
 import * as isDev from 'electron-is-dev'
 import installExtension, {
@@ -51,7 +52,7 @@ function createWindow() {
         .catch((err) => console.log('An error occurred: ', err))
 
     if (isDev) {
-        win.webContents.openDevTools()
+        // win.webContents.openDevTools()
     }
     win.setResizable(false);
 }
@@ -79,3 +80,15 @@ ipcMain.on('minimize', () => {
 ipcMain.on('close', () => {
     app.quit()
 })
+
+ipcMain.on("download", (event, info) => {
+    if (win !== null) {
+        info.properties.onProgress = (status: any) => {
+            console.log(`[[[ ====> ]]] progress: ${Math.floor(status.percent * 100)}%`)
+        };
+        download(win, info.url, info.properties)
+        .then(dl => {
+            console.log("[[[ ====> ]]] Bitmon game download complete!")
+        });
+    }
+});
