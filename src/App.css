@@ -52,6 +52,78 @@
     height: auto;
 }
 
+.progress-bar{
+    position: absolute;
+    left: -55%;
+    top: -40%;
+    right: 0;
+    bottom: 0;
+    display: block;
+    margin: auto;
+    height: auto;
+    background-color: transparent;
+    border: none;
+    background-repeat: no-repeat;
+    background-size: 0 0;
+}
+#bar-container1 {
+    width: 400px;
+    height: 25px;
+    background-color: #475a6b;
+    border-radius: 25px;
+    position: absolute;
+    left: -55%;
+    top: -40%;
+    right: 0;
+    bottom: 0;
+    display: block;
+    margin: auto;
+    border: none;
+    background-repeat: no-repeat;
+    background-size: 0 0;
+}
+#bar-container2 {
+    width: 410px;
+    height: 31px;
+    background-color: #96a1ab;
+    border-radius: 25px;
+    position: absolute;
+    left: -55%;
+    top: -42%;
+    right: 0;
+    bottom: 0;
+    display: block;
+    margin: auto;
+    border: none;
+    background-repeat: no-repeat;
+    background-size: 0 0;
+    background-image: url(./assets/launcher-carga1.png);
+}
+#container-invisible{
+    width: 390px;
+    height: 20px;
+    border-radius: 25px;
+    position: absolute;
+    left: -55%;
+    top: -40%;
+    right: 0;
+    bottom: 0;
+    display: block;
+    margin: auto;
+    border: none;
+    background-repeat: no-repeat;
+    background-size: 0 0;
+    background-color: transparent;
+}
+#bar {
+    width: 100%;
+    height: 80%;
+    background-color: #94d7ff;
+    transition: width 0.2s;
+    border-radius: 25px;
+    margin-top: 2.5px;
+}
+
 .min-btn{
     background-color: transparent;
     border: none;

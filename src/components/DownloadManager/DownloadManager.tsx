@@ -9,6 +9,9 @@ import {
 import { compare } from 'compare-versions'
 import './DownloadManager.css'
 import Spinner from 'react-bootstrap/Spinner';
+import carga1 from '../../assets/launcher-carga1.png'
+import carga2 from '../../assets/launcher-carga2.png'
+import carga3 from '../../assets/launcher-carga3.png'
 
 interface DownloadManagerProps {}
 
@@ -30,7 +33,8 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const [latestVersion, setLatestVersion] = useState('v0.0.0')
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
-
+    const progressBar = document.getElementById('bar');
+   
     useEffect(() => {
         setCurrentPlatform(os.platform())
         setIsInstalled(isGameInstalled())
@@ -60,6 +64,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         latestVersion,
     ])
 
+
     const getLatestVersion = () => {
         const options = {
             url: 'https://api.github.com/repos/bitmon-world/bitmon-releases/releases',
@@ -80,10 +85,12 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         setIsDownloading(true)
         setButtonEnabled(false)
 
-        ipcRenderer.send("download", {
-            url: downloadUrl,
-            properties: { directory: gameDir }
-        });
+        // ipcRenderer.send("download", {
+        //     url: downloadUrl,
+        //     properties: { directory: gameDir }
+        // });
+        // progressBar?.style.width = "20px";
+        // console.log("width: ", progressBar?.style.width);
 
         // TODO when complete do the following
             // var zip = new AdmZip("PATH_TO_BITMON_GAME_ZIP")
@@ -133,16 +140,13 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 )}
 
                 {(!isInstalled || needsUpdate) && isDownloading && (
-                    <button
-                        className="main-btn disabled-btn"
-                        disabled={true}
-                        onClick={downloadGame}
-                    >
-                        {/* TODO change Spinner to Progress Bar */}
-                        <Spinner animation="border" style={{marginTop: '1vh'}} />
-                        {/* {needsUpdate && 'UPDATING...'}
-                        {!needsUpdate && 'DOWNLOADING...'} */}
-                    </button>
+                        <div>
+                            <div id="bar-container2"></div>
+                            <div id="bar-container1"></div>
+                            <div id="container-invisible">
+                                <div id="bar"></div>
+                            </div>                      
+                        </div>
                 )}
 
                 <div className='bottom-info right Vibing-text'>
