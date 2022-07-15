@@ -24,6 +24,7 @@
         "electron-dl": "^3.3.1",
         "electron-is-dev": "^2.0.0",
         "electron-reload": "^2.0.0-alpha.1",
+        "electron-updater": "^5.0.5",
         "react": "^18.1.0",
         "react-bootstrap": "^2.3.1",
         "react-dom": "^18.1.0",
@@ -37,6 +38,7 @@
         "postinstall": "electron-builder install-app-deps",
         "electron:dev": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
         "electron:build": "yarn build && tsc -p electron && electron-builder",
+        "build:publish": "yarn build && tsc -p electron && electron-builder --mac --win --publish always",
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
@@ -44,12 +46,19 @@
         "format": "prettier --write ."
     },
     "build": {
+        "appId": "com.VibingLauncher.vibing",
+        "productName": "Vibing Launcher",
         "extends": null,
         "files": [
             "build/**/*"
         ],
         "directories": {
             "buildResources": "assets"
+        },
+        "win": {
+            "publish": [
+                "github"
+            ]
         }
     },
     "eslintConfig": {
@@ -78,5 +87,9 @@
         "electron-builder": "^23.0.3",
         "prettier": "2.6.2",
         "wait-on": "^6.0.1"
-    }
+    },
+    "repository": {
+		"type": "git",
+		"url": "https://github.com/vibingstudio/vibing-launcher"
+	}
 }

@@ -1,5 +1,6 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
 import { download } from 'electron-dl'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import * as path from 'path'
 import * as isDev from 'electron-is-dev'
 import installExtension, {
@@ -54,6 +55,9 @@ function createWindow() {
     if (isDev) {
         // win.webContents.openDevTools()
     }
+    if (!isDev) {
+        autoUpdater.checkForUpdates();
+    }
     win.setResizable(false);
 }
 
@@ -81,6 +85,7 @@ ipcMain.on('close', () => {
     app.quit()
 })
 
+
 ipcMain.on("download", (event, info) => {
     if (win !== null) {
         info.properties.onProgress = (status: any) => {
@@ -93,3 +98,35 @@ ipcMain.on("download", (event, info) => {
         });
     }
 });
+
+ipcMain.on('app_version', (event) => {
+    event.sender.send('app_version', { version: app.getVersion() });
+});
+
+// auto updater event listeners
+autoUpdater.on("update-available", (event) => {
+    const dialogOptions: any = {
+        type: "info",
+        buttons: ['Ok'],
+        title: 'Launcher update!',
+        message: process.platform === "win32" ? event.releaseNotes : event.releaseName,
+        detail: 'A new version is being downloaded.'
+    }
+    dialog.showMessageBox(dialogOptions)
+})
+
+autoUpdater.on("update-downloaded", (event) => {
+    const dialogOptions: any = {
+        type: "info",
+        buttons: ['Restart', 'Later'],
+        title: 'Launcher update!',
+        message: process.platform === "win32" ? event.releaseNotes : event.releaseName,
+        detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+    }
+    dialog.showMessageBox(dialogOptions).then((_returnValue) => {
+        if (_returnValue.response === 0) {
+            autoUpdater.quitAndInstall()
+        }
+    })
+})    
+

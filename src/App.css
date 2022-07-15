@@ -14,8 +14,9 @@
     position: absolute;
     left: 0;
     top: 0;
-    right: 0;
+    right: -1;
     height: 10%;
+    width: 85%;
     display: block;
     margin: auto;
 }
