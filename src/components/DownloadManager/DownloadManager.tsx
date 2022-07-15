@@ -33,7 +33,6 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const [latestVersion, setLatestVersion] = useState('v0.0.0')
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
-    const progressBar = document.getElementById('bar');
    
     useEffect(() => {
         setCurrentPlatform(os.platform())
@@ -89,12 +88,16 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         //     url: downloadUrl,
         //     properties: { directory: gameDir }
         // });
-        // progressBar?.style.width = "20px";
-        // console.log("width: ", progressBar?.style.width);
+        console.log("...",isInstalled, needsUpdate, isDownloading);
+        
+        const progressBar = document.getElementById('bar');
+        progressBar!.style.width = "20%";
+        console.log("width: ", progressBar?.style.width);
 
         // TODO when complete do the following
             // var zip = new AdmZip("PATH_TO_BITMON_GAME_ZIP")
             // zip.extractAllTo(gameDir, true)
+
             // writeFileVersion(os.platform(), latestVersion)
             // setInstalledVersion(latestVersion)
             // setIsDownloading(false)
@@ -145,7 +148,8 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                             <div id="bar-container1"></div>
                             <div id="container-invisible">
                                 <div id="bar"></div>
-                            </div>                      
+                            </div>          
+                            <div className='percentage Vibing-text'>99%</div>           
                         </div>
                 )}
 

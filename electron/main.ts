@@ -88,6 +88,7 @@ ipcMain.on("download", (event, info) => {
         };
         download(win, info.url, info.properties)
         .then(dl => {
+            console.log("path: ",dl.getSavePath());
             console.log("[[[ ====> ]]] Bitmon game download complete!")
         });
     }
