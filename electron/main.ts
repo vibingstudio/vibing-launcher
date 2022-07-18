@@ -10,6 +10,7 @@ import installExtension, {
 let win: BrowserWindow | null = null
 
 function createWindow() {
+    
     win = new BrowserWindow({
         width: 800,
         height: 600,

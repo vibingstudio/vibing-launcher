@@ -84,19 +84,24 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         setIsDownloading(true)
         setButtonEnabled(false)
 
-        // ipcRenderer.send("download", {
-        //     url: downloadUrl,
-        //     properties: { directory: gameDir }
-        // });
-        console.log("...",isInstalled, needsUpdate, isDownloading);
+        ipcRenderer.send("download", {
+            url: downloadUrl,
+            properties: { directory: gameDir }
+        });
         
-        const progressBar = document.getElementById('bar');
-        progressBar!.style.width = "20%";
-        console.log("width: ", progressBar?.style.width);
+        
+        // const progressBar = document.getElementById('bar');
+        // progressBar!.style.width = "20%";   
 
-        // TODO when complete do the following
-            // var zip = new AdmZip("PATH_TO_BITMON_GAME_ZIP")
-            // zip.extractAllTo(gameDir, true)
+        // TODO when complete do the following  
+        // C:\Users\scago\Bitmon\Bitmon_windows.zip
+        // C:\Users\scago\Bitmon\Bitmon_windows.zip
+            
+            var zipPath = gameDir + '\\' + getDownloadLink().substring(73,getDownloadLink().length);
+            console.log(zipPath);
+            var zip = new AdmZip(zipPath)
+            zip.extractAllTo(gameDir, true)
+
 
             // writeFileVersion(os.platform(), latestVersion)
             // setInstalledVersion(latestVersion)
