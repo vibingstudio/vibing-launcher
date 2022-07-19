@@ -95,7 +95,6 @@ ipcMain.on('close', () => {
                 var perc = Math.floor(status.percent * 100);
                 console.log(`[[[ ====> ]]] progress: ${perc}%`)
                 event.sender.send('progress', perc);
-                console.log("n", perc);
             };
             download(win, info.url, info.properties)
             .then(dl => {
