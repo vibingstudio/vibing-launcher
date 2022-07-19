@@ -35,7 +35,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const [latestVersion, setLatestVersion] = useState('v0.0.0')
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
-    const progressBar = document.getElementById('bar');
+   
     var result:any;
    
     useEffect(() => {
@@ -83,28 +83,27 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             }
         })
     }
-    // useEffect(()=>{
-    //     // progressBar!.style.width = "20%";
-    //     console.log(progressBar!.style.width);
+    useEffect(()=>{
+        console.log(!isInstalled, needsUpdate, isDownloading);
         
-    // },[progressBar!.style])
+        if( (!isInstalled || needsUpdate) && isDownloading){
+            const progressBar = document.getElementById('bar');
+            progressBar!.style.width = "10%";
+            console.log("style: ",progressBar?.style.width);
+        }
+        
+    }, [isInstalled, needsUpdate, isDownloading])
 
     const downloadGame = () => {
         setIsDownloading(true)
         setButtonEnabled(false)
+
         
         ipcRenderer.send("download", {
             url: downloadUrl,
             properties: { directory: gameDir }
         });
-
-        // result =  ipcRenderer.invoke('progress',{
-        //     url: downloadUrl,
-        //     properties: { directory: gameDir }
-        // })
-
         result = ipcRenderer.on('progress', function(event: any, response: any){
-            // result = response
             console.log("resp: ",response);
         })
         
