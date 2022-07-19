@@ -1,5 +1,5 @@
 import { download } from 'electron-dl'
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, ipcRenderer } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import * as path from 'path'
 import * as isDev from 'electron-is-dev'
@@ -10,7 +10,6 @@ import installExtension, {
 let win: BrowserWindow | null = null
 
 function createWindow() {
-    
     win = new BrowserWindow({
         width: 800,
         height: 600,
@@ -22,6 +21,9 @@ function createWindow() {
         //titleBarStyle: 'hidden'
     })
 
+    win.webContents.on('did-finish-load', function() {
+        win?.webContents.send('ping', 'hey ya!');
+    });
     if (isDev) {
         win.loadURL('http://localhost:3000/index.html')
     } else {
@@ -86,19 +88,26 @@ ipcMain.on('close', () => {
     app.quit()
 })
 
+// ipcMain.handle('progress', (event, info) => {
+    ipcMain.on("download", (event, info) => {
+        if (win !== null) {
+            info.properties.onProgress = (status: any) => {
+                var perc = Math.floor(status.percent * 100);
+                console.log(`[[[ ====> ]]] progress: ${perc}%`)
+                event.sender.send('progress', perc);
+                console.log("n", perc);
+            };
+            download(win, info.url, info.properties)
+            .then(dl => {
+                console.log("path: ",dl.getSavePath());
+                console.log("[[[ ====> ]]] Bitmon game download complete!")
+            });
+        }
+    });
 
-ipcMain.on("download", (event, info) => {
-    if (win !== null) {
-        info.properties.onProgress = (status: any) => {
-            console.log(`[[[ ====> ]]] progress: ${Math.floor(status.percent * 100)}%`)
-        };
-        download(win, info.url, info.properties)
-        .then(dl => {
-            console.log("path: ",dl.getSavePath());
-            console.log("[[[ ====> ]]] Bitmon game download complete!")
-        });
-    }
-});
+// })
+
+
 
 ipcMain.on('app_version', (event) => {
     event.sender.send('app_version', { version: app.getVersion() });

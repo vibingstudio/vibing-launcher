@@ -12,6 +12,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import carga1 from '../../assets/launcher-carga1.png'
 import carga2 from '../../assets/launcher-carga2.png'
 import carga3 from '../../assets/launcher-carga3.png'
+import { ProgressBar } from 'react-bootstrap';
 
 interface DownloadManagerProps {}
 
@@ -20,6 +21,7 @@ const os = window.require('os')
 const request = window.require('request')
 const exec = window.require('child_process').exec
 const ipcRenderer = window.require('electron').ipcRenderer;
+const ipcMain = window.require('electron').ipcMain;
 var execWin = window.require('child_process').execFile;
 
 export const DownloadManager: FC<DownloadManagerProps> = () => {
@@ -33,6 +35,8 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const [latestVersion, setLatestVersion] = useState('v0.0.0')
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
+    const progressBar = document.getElementById('bar');
+    var result:any;
    
     useEffect(() => {
         setCurrentPlatform(os.platform())
@@ -79,36 +83,42 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             }
         })
     }
+    // useEffect(()=>{
+    //     // progressBar!.style.width = "20%";
+    //     console.log(progressBar!.style.width);
+        
+    // },[progressBar!.style])
 
     const downloadGame = () => {
         setIsDownloading(true)
         setButtonEnabled(false)
-
+        
         ipcRenderer.send("download", {
             url: downloadUrl,
             properties: { directory: gameDir }
         });
-        
-        
-        // const progressBar = document.getElementById('bar');
-        // progressBar!.style.width = "20%";   
 
-        // TODO when complete do the following  
-        // C:\Users\scago\Bitmon\Bitmon_windows.zip
-        // C:\Users\scago\Bitmon\Bitmon_windows.zip
-            
+        // result =  ipcRenderer.invoke('progress',{
+        //     url: downloadUrl,
+        //     properties: { directory: gameDir }
+        // })
+
+        result = ipcRenderer.on('progress', function(event: any, response: any){
+            // result = response
+            console.log("resp: ",response);
+        })
+        
+        //extract zip until done downloading
             var zipPath = gameDir + '\\' + getDownloadLink().substring(73,getDownloadLink().length);
             console.log(zipPath);
             var zip = new AdmZip(zipPath)
             zip.extractAllTo(gameDir, true)
-
-
-            // writeFileVersion(os.platform(), latestVersion)
-            // setInstalledVersion(latestVersion)
-            // setIsDownloading(false)
-            // setIsInstalled(true)
-            // setButtonEnabled(true)
-            // setNeedsUpdate(false)
+            writeFileVersion(os.platform(), latestVersion)
+            setInstalledVersion(latestVersion)
+            setIsDownloading(false)
+            setIsInstalled(true)
+            setButtonEnabled(true)
+            setNeedsUpdate(false)
     }
 
     const runGame = async () => {
