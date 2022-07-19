@@ -88,25 +88,18 @@ ipcMain.on('close', () => {
     app.quit()
 })
 
-// ipcMain.handle('progress', (event, info) => {
-    ipcMain.on("download", (event, info) => {
-        if (win !== null) {
-            info.properties.onProgress = (status: any) => {
-                var perc = Math.floor(status.percent * 100);
-                console.log(`[[[ ====> ]]] progress: ${perc}%`)
-                event.sender.send('progress', perc);
-            };
-            download(win, info.url, info.properties)
-            .then(dl => {
-                console.log("path: ",dl.getSavePath());
-                console.log("[[[ ====> ]]] Bitmon game download complete!")
-            });
-        }
-    });
-
-// })
-
-
+ipcMain.on("download", (event, info) => {
+    if (win !== null) {
+        info.properties.onProgress = (status: any) => {
+            var perc = Math.floor(status.percent * 100);
+            event.sender.send('progress', perc);
+        };
+        download(win, info.url, info.properties)
+        .then(dl => {
+            event.sender.send('save-path', dl.getSavePath());
+        });
+    }
+});
 
 ipcMain.on('app_version', (event) => {
     event.sender.send('app_version', { version: app.getVersion() });

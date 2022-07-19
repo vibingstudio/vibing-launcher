@@ -8,22 +8,15 @@ import {
 } from '../../utils/gamePathUtils'
 import { compare } from 'compare-versions'
 import './DownloadManager.css'
-import Spinner from 'react-bootstrap/Spinner';
-import carga1 from '../../assets/launcher-carga1.png'
-import carga2 from '../../assets/launcher-carga2.png'
-import carga3 from '../../assets/launcher-carga3.png'
-import { ProgressBar } from 'react-bootstrap';
-
 interface DownloadManagerProps {}
 
 const AdmZip = window.require('adm-zip')
 const os = window.require('os')
+const fs = window.require('fs');
 const request = window.require('request')
 const exec = window.require('child_process').exec
 const ipcRenderer = window.require('electron').ipcRenderer;
-const ipcMain = window.require('electron').ipcMain;
 var execWin = window.require('child_process').execFile;
-
 
 export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [gamePath, setGamePath] = useState('')
@@ -37,7 +30,6 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [latestVersion, setLatestVersion] = useState('v0.0.0')
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
     const [currProg, setCurrProg]  = useState("0")
-    var result:any;
    
     useEffect(() => {
         setCurrentPlatform(os.platform())
@@ -60,14 +52,20 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 }
             }
         }
+
+        if ((!isInstalled || needsUpdate) && isDownloading) {
+            const progressBar = document.getElementById('bar');
+            progressBar!.style.width = currProg + "%";
+        }
     }, [
         isInstalled,
         currentPlatform,
         needsUpdate,
         installedVersion,
         latestVersion,
+        currProg,
+        isDownloading
     ])
-
 
     const getLatestVersion = () => {
         const options = {
@@ -84,44 +82,33 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             }
         })
     }
-    useEffect(()=>{
-        console.log("currProg:",currProg);
-        if( (!isInstalled || needsUpdate) && isDownloading){
-            const progressBar = document.getElementById('bar');
-            progressBar!.style.width = currProg+"%";
-            console.log("style: ",progressBar?.style.width);
-        }
-    }, [isInstalled, needsUpdate, isDownloading, currProg])
 
     const downloadGame = () => {
         setIsDownloading(true)
         setButtonEnabled(false)
-        
+
         ipcRenderer.send("download", {
             url: downloadUrl,
             properties: { directory: gameDir }
         });
-        result = ipcRenderer.on('progress', function(event: any, response: any){
+        ipcRenderer.on('progress', function(event: any, response: any){
             setCurrProg(response);
-            console.log("resp: ",response);
         })
-        
-        //extract zip until done downloading
-            var zipPath = gameDir + '\\' + getDownloadLink().substring(73,getDownloadLink().length);
-            console.log(zipPath);
-            var zip = new AdmZip(zipPath)
+        ipcRenderer.on('save-path', (event: any, response: any) => {
+            var zip = new AdmZip(response)
             zip.extractAllTo(gameDir, true)
+            fs.unlinkSync(response)
             writeFileVersion(os.platform(), latestVersion)
             setInstalledVersion(latestVersion)
             setIsDownloading(false)
             setIsInstalled(true)
             setButtonEnabled(true)
             setNeedsUpdate(false)
+        })
     }
 
     const runGame = async () => {
         // file permissions on mac only
-        console.log("current platform", currentPlatform)
         if (currentPlatform === 'darwin') {
             await exec("chmod -R 755 " + gamePath)
             await exec("open " + gamePath)
@@ -157,10 +144,10 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
 
                 {(!isInstalled || needsUpdate) && isDownloading && (
                         <div>
-                            <div id="bar-container2"></div>
-                            <div id="bar-container1"></div>
+                            <div id="bar-container2" />
+                            <div id="bar-container1" />
                             <div id="container-invisible">
-                                <div id="bar"></div>
+                                <div id="bar" />
                             </div>          
                             <div className='percentage Vibing-text'>{currProg}%</div>           
                         </div>
