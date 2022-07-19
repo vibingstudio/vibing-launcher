@@ -24,6 +24,7 @@ const ipcRenderer = window.require('electron').ipcRenderer;
 const ipcMain = window.require('electron').ipcMain;
 var execWin = window.require('child_process').execFile;
 
+
 export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [gamePath, setGamePath] = useState('')
     const [gameDir, setGameDir] = useState('')
@@ -35,7 +36,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const [latestVersion, setLatestVersion] = useState('v0.0.0')
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
-    var currProg="0";
+    const [currProg, setCurrProg]  = useState("0")
     var result:any;
    
     useEffect(() => {
@@ -87,8 +88,8 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         console.log("currProg:",currProg);
         if( (!isInstalled || needsUpdate) && isDownloading){
             const progressBar = document.getElementById('bar');
-                progressBar!.style.width = currProg+"%";
-                console.log("style: ",progressBar?.style.width);
+            progressBar!.style.width = currProg+"%";
+            console.log("style: ",progressBar?.style.width);
         }
     }, [isInstalled, needsUpdate, isDownloading, currProg])
 
@@ -101,7 +102,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             properties: { directory: gameDir }
         });
         result = ipcRenderer.on('progress', function(event: any, response: any){
-            
+            setCurrProg(response);
             console.log("resp: ",response);
         })
         
@@ -161,7 +162,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                             <div id="container-invisible">
                                 <div id="bar"></div>
                             </div>          
-                            <div className='percentage Vibing-text'>99%</div>           
+                            <div className='percentage Vibing-text'>{currProg}%</div>           
                         </div>
                 )}
 
