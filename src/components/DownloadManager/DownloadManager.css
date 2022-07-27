@@ -63,7 +63,7 @@
     transform: scale(1);
     padding-left: 3vh;
     padding-right: 3vh;
-    margin-left: -0.1vh;
+    padding-top: 0.5vh;
 }
 
 .download-btn:hover {

@@ -51,7 +51,7 @@ function App() {
                     onClick={handleMinButton}
                 > 
                 </button>
-                <DownloadManager></DownloadManager>
+                <DownloadManager />
             </div>
         </div>
     )

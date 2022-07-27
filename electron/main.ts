@@ -1,4 +1,5 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { download } from 'electron-dl'
+import { app, BrowserWindow, dialog, ipcMain, ipcRenderer } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import * as path from 'path'
 import * as isDev from 'electron-is-dev'
@@ -20,6 +21,9 @@ function createWindow() {
         //titleBarStyle: 'hidden'
     })
 
+    win.webContents.on('did-finish-load', function() {
+        win?.webContents.send('ping', 'hey ya!');
+    });
     if (isDev) {
         win.loadURL('http://localhost:3000/index.html')
     } else {
@@ -52,7 +56,7 @@ function createWindow() {
         .catch((err) => console.log('An error occurred: ', err))
 
     if (isDev) {
-        //win.webContents.openDevTools()
+        // win.webContents.openDevTools()
     }
     if (!isDev) {
         autoUpdater.checkForUpdates();
@@ -84,6 +88,19 @@ ipcMain.on('close', () => {
     app.quit()
 })
 
+ipcMain.on("download", (event, info) => {
+    if (win !== null) {
+        info.properties.onProgress = (status: any) => {
+            var perc = Math.floor(status.percent * 100);
+            event.sender.send('progress', perc);
+        };
+        download(win, info.url, info.properties)
+        .then(dl => {
+            event.sender.send('save-path', dl.getSavePath());
+        });
+    }
+});
+
 ipcMain.on('app_version', (event) => {
     event.sender.send('app_version', { version: app.getVersion() });
 });
@@ -114,3 +131,4 @@ autoUpdater.on("update-downloaded", (event) => {
         }
     })
 })    
+
