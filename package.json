@@ -38,7 +38,7 @@
         "postinstall": "electron-builder install-app-deps",
         "electron:dev": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
         "electron:build": "yarn build && tsc -p electron && electron-builder",
-        "build:publish": "yarn build && tsc -p electron && electron-builder --mac --win --publish always",
+        "build:publish": "yarn build && tsc -p electron && CSC_NAME=H95T8EH7Z9 electron-builder --mac",
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
