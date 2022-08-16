@@ -50,7 +50,7 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
             outPath = pathModule.join(os.homedir(), 'Applications')
             break
         case 'win32':
-            outPath = pathModule.join(os.homedir(), 'Bitmon')
+            outPath = pathModule.join(os.homedir(), 'Bitmon Adventures')
             break
         case 'linux':
             outPath = pathModule.join(
@@ -70,10 +70,10 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
     if (fullPath) {
         switch (platform) {
             case 'darwin':
-                outPath = pathModule.join(outPath, 'Bitmon.app')
+                outPath = pathModule.join(outPath, '"Bitmon Adventures".app')
                 break
             case 'win32':
-                outPath = pathModule.join(outPath, 'Bitmon', 'Bitmon.exe')
+                outPath = pathModule.join(outPath, '"Bitmon Adventures"', 'BitmonAdventures.exe')
                 break
             case 'linux':
                 outPath = pathModule.join(outPath, 'bitmon')
@@ -85,7 +85,7 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
         }
     }
 
-    // console.log('gamePath:', outPath)
+    console.log('debug path:', outPath)
     return outPath
 }
 
@@ -96,7 +96,7 @@ function getVersionPath(platform: string, fullPath: boolean) {
             outPath = pathModule.join(os.homedir(), 'Applications')
             break
         case 'win32':
-            outPath = pathModule.join(os.homedir(), 'Bitmon')
+            outPath = pathModule.join(os.homedir(), "Bitmon Adventures")
             break
         case 'linux':
             outPath = pathModule.join(
@@ -119,7 +119,7 @@ function getVersionPath(platform: string, fullPath: boolean) {
                 outPath = pathModule.join(outPath, 'version.txt')
                 break
             case 'win32':
-                outPath = pathModule.join(outPath, 'Bitmon', 'version.txt')
+                outPath = pathModule.join(outPath, 'version.txt')
                 break
             case 'linux':
                 outPath = pathModule.join(outPath, 'bitmon', 'version.txt')
@@ -131,19 +131,20 @@ function getVersionPath(platform: string, fullPath: boolean) {
         }
     }
 
-    // console.log('versionPath:', outPath)
+    console.log('versionPath:', outPath)
     return outPath
 }
 
 export function writeFileVersion(platform: string, version: string) {
     fs.writeFile(getVersionPath(platform, true), version, function (err: any) {
-        if (err) return console.log(err)
+        if (err) return console.log("error writing file: ", err)
         // console.log('Content Written > helloworld.txt')
     })
 }
 
 export function getInstalledVersion(platform: string): string {
     try {
+        console.log("version path installed: ", getVersionPath(platform, true))
         const version = fs.readFileSync(getVersionPath(platform, true), 'utf-8')
         // console.log('found version: ', version)
         return version

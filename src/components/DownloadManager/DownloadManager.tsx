@@ -32,6 +32,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [currProg, setCurrProg]  = useState("0")
    
     useEffect(() => {
+        
         setCurrentPlatform(os.platform())
         setIsInstalled(isGameInstalled())
         setGameDir(getGameInstallPath(currentPlatform, false))
@@ -40,6 +41,8 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         setButtonEnabled(true)
         setInstalledVersion(getInstalledVersion(currentPlatform))
         getLatestVersion()
+
+        console.log("latest version: ", latestVersion)
 
         if (latestVersion && installedVersion) {
             if (installedVersion === 'v0.0.0') {
@@ -57,6 +60,10 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
             const progressBar = document.getElementById('bar');
             progressBar!.style.width = currProg + "%";
         }
+
+        console.log("state gamedir: ", gameDir)
+        console.log("state gamepath: ", gamePath)
+        console.log("state installed version: ", getInstalledVersion(currentPlatform))
     }, [
         isInstalled,
         currentPlatform,
@@ -76,7 +83,9 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
         }
 
         request.get(options, (err: any, res: any, body: any) => {
+            
             let releases = JSON.parse(body)
+            console.log("releases: ", releases)
             if (releases[0]) {
                 setLatestVersion(releases[0]['tag_name'])
             }
