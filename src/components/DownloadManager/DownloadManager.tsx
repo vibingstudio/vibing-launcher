@@ -129,8 +129,8 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const runGame = async () => {
         // file permissions on mac only
         if (currentPlatform === 'darwin') {
-            await exec("chmod -R 755 " + gamePath)
-            await exec("open " + gamePath)
+            await exec("chmod -R 755 " + "\"" + gamePath + "\"")
+            await exec("open " + "\"" + gamePath + "\"")
         } else if (currentPlatform === 'win32'){
             await execWin(gamePath, function (err: any, data: any) {
                 console.log('err: ', err)
