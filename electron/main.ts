@@ -61,7 +61,7 @@ function createWindow() {
     if (!isDev) {
         autoUpdater.checkForUpdates();
     }
-    win.setResizable(false);
+    win.setResizable(true);
 }
 
 app.on('ready', createWindow)
