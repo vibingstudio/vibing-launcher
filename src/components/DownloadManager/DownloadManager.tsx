@@ -8,6 +8,7 @@ import {
 } from '../../utils/gamePathUtils'
 import { compare } from 'compare-versions'
 import './DownloadManager.css'
+import { tmpdir } from 'os'
 interface DownloadManagerProps {}
 
 const AdmZip = window.require('adm-zip')
@@ -30,6 +31,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [latestVersion, setLatestVersion] = useState('v0.0.0')
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
     const [currProg, setCurrProg]  = useState("0")
+    const [timestampVersion, setTimestampVersion]  = useState(0)
    
     useEffect(() => {
         
@@ -75,21 +77,29 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     ])
 
     const getLatestVersion = () => {
-        const options = {
-            url: 'https://api.github.com/repos/bitmon-world/bitmon-releases/releases',
-            headers: {
-                'User-Agent': 'Vibing Studios Launcher',
-            },
-        }
-
-        request.get(options, (err: any, res: any, body: any) => {
-            
-            let releases = JSON.parse(body)
-            console.log("releases: ", releases)
-            if (releases[0]) {
-                setLatestVersion(releases[0]['tag_name'])
+        console.log("Cached Version: ", latestVersion)
+        if (Date.now() > timestampVersion + 60000) {
+            const options = {
+                url: 'https://api.github.com/repos/bitmon-world/bitmon-releases/releases',
+                headers: {
+                    'User-Agent': 'Vibing Studios Launcher',
+                },
             }
-        })
+    
+            request.get(options, (err: any, res: any, body: any) => {
+                
+                let releases = JSON.parse(body)
+                console.log("releases: ", releases)
+                if (releases[0]) {
+                    setLatestVersion(releases[0]['tag_name'])
+                }
+            })
+            setTimestampVersion(Date.now())
+            console.log("Date new: ", timestampVersion)
+        } else {
+            console.log("Date: using cached version")
+        }
+        
     }
 
     const downloadGame = () => {

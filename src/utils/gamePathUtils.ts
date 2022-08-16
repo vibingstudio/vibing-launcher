@@ -6,9 +6,13 @@ export function isGameInstalled() {
     let platform = os.platform()
     let gamePath = getGameInstallPath(platform, true)
 
+    console.log("isGameInstalled: ", "\"" + gamePath + "\"");
+
     if (fs.existsSync(gamePath)) {
+        console.log("isGameInstalled exists: true");
         return true
     } else {
+        console.log("isGameInstalled exists: false");
         return false
     }
 }
@@ -50,7 +54,7 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
             outPath = pathModule.join(os.homedir(), 'Applications')
             break
         case 'win32':
-            outPath = pathModule.join(os.homedir(), 'Bitmon Adventures')
+            outPath = pathModule.join(os.homedir(), "Bitmon Adventures")
             break
         case 'linux':
             outPath = pathModule.join(
@@ -70,10 +74,10 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
     if (fullPath) {
         switch (platform) {
             case 'darwin':
-                outPath = pathModule.join(outPath, '"Bitmon Adventures".app')
+                outPath = pathModule.join(outPath, "Bitmon Adventures.app")
                 break
             case 'win32':
-                outPath = pathModule.join(outPath, '"Bitmon Adventures"', 'BitmonAdventures.exe')
+                outPath = pathModule.join(outPath, "Bitmon Adventures", 'BitmonAdventures.exe')
                 break
             case 'linux':
                 outPath = pathModule.join(outPath, 'bitmon')
