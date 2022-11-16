@@ -53,7 +53,7 @@
     height: auto;
 }
 
-.progress-bar{
+.progress-bar {
     position: absolute;
     left: -55%;
     top: -40%;
@@ -67,7 +67,7 @@
     background-repeat: no-repeat;
     background-size: 0 0;
 }
-.percentage{
+.percentage {
     border-radius: 25px;
     position: absolute;
     left: -55%;
@@ -100,7 +100,7 @@
     width: 410px;
     height: 31px;
     border-style: solid;
-    border-width: 1px; 
+    border-width: 1px;
     background-color: #96a1ab;
     border-radius: 25px;
     position: absolute;
@@ -114,7 +114,7 @@
     background-size: 0 0;
     background-image: url(./assets/launcher-carga1.png);
 }
-#container-invisible{
+#container-invisible {
     width: 380px;
     height: 13px;
     border-radius: 25px;
@@ -139,7 +139,7 @@
     margin-top: 2.5px;
 }
 
-.min-btn{
+.min-btn {
     background-color: transparent;
     border: none;
     position: absolute;
@@ -153,7 +153,7 @@
     height: 39px;
 }
 
-.x-btn{
+.x-btn {
     background-color: transparent;
     border: none;
     position: absolute;

@@ -12,13 +12,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
 .main-btn {
     font-family: 'Lilita One', cursive;
-    font-size: 170%; 
+    font-size: 170%;
     text-align: center;
     font-weight: bold;
     background-image: url(../../assets/launcher-boton1.png);
     background-size: 100%;
     cursor: pointer;
-    color: rgb(213, 240, 255);  
+    color: rgb(213, 240, 255);
     background-color: transparent;
     background-repeat: no-repeat;
     border: none;
@@ -33,7 +33,7 @@
 }
 
 .main-btn:hover {
-    transform: scale(1.1) perspective(1px)
+    transform: scale(1.1) perspective(1px);
 }
 
 .disabled-btn {
@@ -43,13 +43,13 @@
 
 .download-btn {
     font-family: 'Lilita One', cursive;
-    font-size: 170%; 
+    font-size: 170%;
     text-align: center;
     font-weight: bold;
     background-image: url(../../assets/launcher-boton1.png);
     background-size: 100%;
     cursor: pointer;
-    color: rgb(213, 240, 255);  
+    color: rgb(213, 240, 255);
     background-color: transparent;
     background-repeat: no-repeat;
     border: none;
@@ -67,13 +67,13 @@
 }
 
 .download-btn:hover {
-    transform: scale(1.1) perspective(1px)
+    transform: scale(1.1) perspective(1px);
 }
 
 .bottom-info {
     position: absolute;
     bottom: 8vh;
-    
+
     display: inline-block;
 }
 

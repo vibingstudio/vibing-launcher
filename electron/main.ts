@@ -21,9 +21,9 @@ function createWindow() {
         //titleBarStyle: 'hidden'
     })
 
-    win.webContents.on('did-finish-load', function() {
-        win?.webContents.send('ping', 'hey ya!');
-    });
+    win.webContents.on('did-finish-load', function () {
+        win?.webContents.send('ping', 'hey ya!')
+    })
     if (isDev) {
         win.loadURL('http://localhost:3000/index.html')
     } else {
@@ -59,9 +59,9 @@ function createWindow() {
         // win.webContents.openDevTools()
     }
     if (!isDev) {
-        autoUpdater.checkForUpdates();
+        autoUpdater.checkForUpdates()
     }
-    win.setResizable(true);
+    win.setResizable(true)
 }
 
 app.on('ready', createWindow)
@@ -88,47 +88,51 @@ ipcMain.on('close', () => {
     app.quit()
 })
 
-ipcMain.on("download", (event, info) => {
+ipcMain.on('download', (event, info) => {
     if (win !== null) {
         info.properties.onProgress = (status: any) => {
-            var perc = Math.floor(status.percent * 100);
-            event.sender.send('progress', perc);
-        };
-        download(win, info.url, info.properties)
-        .then(dl => {
-            event.sender.send('save-path', dl.getSavePath());
-        });
+            var perc = Math.floor(status.percent * 100)
+            event.sender.send('progress', perc)
+        }
+        download(win, info.url, info.properties).then((dl) => {
+            event.sender.send('save-path', dl.getSavePath())
+        })
     }
-});
+})
 
 ipcMain.on('app_version', (event) => {
-    event.sender.send('app_version', { version: app.getVersion() });
-});
+    event.sender.send('app_version', { version: app.getVersion() })
+})
 
 // auto updater event listeners
-autoUpdater.on("update-available", (event) => {
+autoUpdater.on('update-available', (event) => {
     const dialogOptions: any = {
-        type: "info",
+        type: 'info',
         buttons: ['Ok'],
         title: 'Launcher update!',
-        message: process.platform === "win32" ? event.releaseNotes : event.releaseName,
-        detail: 'A new version is being downloaded.'
+        message:
+            process.platform === 'win32'
+                ? event.releaseNotes
+                : event.releaseName,
+        detail: 'A new version is being downloaded.',
     }
     dialog.showMessageBox(dialogOptions)
 })
 
-autoUpdater.on("update-downloaded", (event) => {
+autoUpdater.on('update-downloaded', (event) => {
     const dialogOptions: any = {
-        type: "info",
+        type: 'info',
         buttons: ['Restart', 'Later'],
         title: 'Launcher update!',
-        message: process.platform === "win32" ? event.releaseNotes : event.releaseName,
-        detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+        message:
+            process.platform === 'win32'
+                ? event.releaseNotes
+                : event.releaseName,
+        detail: 'A new version has been downloaded. Restart the application to apply the updates.',
     }
     dialog.showMessageBox(dialogOptions).then((_returnValue) => {
         if (_returnValue.response === 0) {
             autoUpdater.quitAndInstall()
         }
     })
-})    
-
+})

@@ -6,13 +6,13 @@ export function isGameInstalled() {
     let platform = os.platform()
     let gamePath = getGameInstallPath(platform, true)
 
-    console.log("isGameInstalled: ", "\"" + gamePath + "\"");
+    console.log('isGameInstalled: ', '"' + gamePath + '"')
 
     if (fs.existsSync(gamePath)) {
-        console.log("isGameInstalled exists: true");
+        console.log('isGameInstalled exists: true')
         return true
     } else {
-        console.log("isGameInstalled exists: false");
+        console.log('isGameInstalled exists: false')
         return false
     }
 }
@@ -54,7 +54,7 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
             outPath = pathModule.join(os.homedir(), 'Applications')
             break
         case 'win32':
-            outPath = pathModule.join(os.homedir(), "Bitmon Adventures")
+            outPath = pathModule.join(os.homedir(), 'Bitmon Adventures')
             break
         case 'linux':
             outPath = pathModule.join(
@@ -74,10 +74,14 @@ export function getGameInstallPath(platform: string, fullPath: boolean) {
     if (fullPath) {
         switch (platform) {
             case 'darwin':
-                outPath = pathModule.join(outPath, "Bitmon Adventures.app")
+                outPath = pathModule.join(outPath, 'Bitmon Adventures.app')
                 break
             case 'win32':
-                outPath = pathModule.join(outPath, "Bitmon Adventures", 'BitmonAdventures.exe')
+                outPath = pathModule.join(
+                    outPath,
+                    'Bitmon Adventures',
+                    'BitmonAdventures.exe'
+                )
                 break
             case 'linux':
                 outPath = pathModule.join(outPath, 'bitmon')
@@ -100,7 +104,7 @@ function getVersionPath(platform: string, fullPath: boolean) {
             outPath = pathModule.join(os.homedir(), 'Applications')
             break
         case 'win32':
-            outPath = pathModule.join(os.homedir(), "Bitmon Adventures")
+            outPath = pathModule.join(os.homedir(), 'Bitmon Adventures')
             break
         case 'linux':
             outPath = pathModule.join(
@@ -141,14 +145,14 @@ function getVersionPath(platform: string, fullPath: boolean) {
 
 export function writeFileVersion(platform: string, version: string) {
     fs.writeFile(getVersionPath(platform, true), version, function (err: any) {
-        if (err) return console.log("error writing file: ", err)
+        if (err) return console.log('error writing file: ', err)
         // console.log('Content Written > helloworld.txt')
     })
 }
 
 export function getInstalledVersion(platform: string): string {
     try {
-        console.log("version path installed: ", getVersionPath(platform, true))
+        console.log('version path installed: ', getVersionPath(platform, true))
         const version = fs.readFileSync(getVersionPath(platform, true), 'utf-8')
         // console.log('found version: ', version)
         return version

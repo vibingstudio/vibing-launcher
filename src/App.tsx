@@ -5,20 +5,19 @@ import bitmonLogo from './assets/logo bitmon.png'
 
 import './App.css'
 import { DownloadManager } from './components/DownloadManager/DownloadManager'
-const ipcRenderer = window.require('electron').ipcRenderer;
+const ipcRenderer = window.require('electron').ipcRenderer
 
 function App() {
-
     const handleCloseButton = () => {
         ipcRenderer.send('close')
     }
-    
+
     const handleMinButton = () => {
         ipcRenderer.send('minimize')
     }
 
     return (
-        <div className="App" >
+        <div className="App">
             <div>
                 <img
                     draggable="false"
@@ -30,27 +29,25 @@ function App() {
                     draggable="false"
                     className="Launcher-image"
                     src={launcherImage}
-                    alt='launcher img'
+                    alt="launcher img"
                 ></img>
                 <img
                     draggable="false"
                     className="Bitmon-logo"
                     src={bitmonLogo}
-                    alt='bitmon logo'
+                    alt="bitmon logo"
                 ></img>
                 <div className="Draggable-Frame-Area" />
                 <button
-                    id='close-btn'
+                    id="close-btn"
                     className="x-btn"
                     onClick={handleCloseButton}
-                >
-                </button>
+                ></button>
                 <button
-                    id='min-btn'
+                    id="min-btn"
                     className="min-btn"
                     onClick={handleMinButton}
-                > 
-                </button>
+                ></button>
                 <DownloadManager />
             </div>
         </div>
