@@ -9,6 +9,7 @@ import {
 import { compare } from 'compare-versions'
 import './DownloadManager.css'
 import { tmpdir } from 'os'
+import { ChangelogModal } from '../ChangelogModal/ChangelogModal'
 interface DownloadManagerProps {}
 
 const AdmZip = window.require('adm-zip')
@@ -32,6 +33,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
     const [installedVersion, setInstalledVersion] = useState('v0.0.0')
     const [currProg, setCurrProg] = useState('0')
     const [timestampVersion, setTimestampVersion] = useState(0)
+    const [changelog, setChangelog] = useState('')
 
     useEffect(() => {
         setCurrentPlatform(os.platform())
@@ -93,6 +95,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 console.log('releases: ', releases)
                 if (releases[0]) {
                     setLatestVersion(releases[0]['tag_name'])
+                    setChangelog(releases[0]['body'])
                 }
             })
             setTimestampVersion(Date.now())
@@ -175,6 +178,7 @@ export const DownloadManager: FC<DownloadManagerProps> = () => {
                 )}
 
                 <div className="bottom-info right Vibing-text">
+                    <ChangelogModal changelog={changelog} />
                     <div>Latest Version: {latestVersion}</div>
                     {isInstalled && (
                         <div style={{ fontSize: 'small' }}>

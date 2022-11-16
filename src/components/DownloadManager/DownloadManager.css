@@ -17,6 +17,7 @@
     font-weight: bold;
     background-image: url(../../assets/launcher-boton1.png);
     background-size: 100%;
+    background-position: center;
     cursor: pointer;
     color: rgb(213, 240, 255);
     background-color: transparent;
